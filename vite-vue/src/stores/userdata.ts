@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { UserData } from "@/stores/interface";
-import { ref, computed } from "vue";
+
 import { ElMessage } from "element-plus";
 //引入Elmessage和Elloading的css样式文件
 import "element-plus/theme-chalk/el-loading.css";
@@ -45,7 +45,7 @@ export const useDateStore = defineStore("storeId", {
     },
   },
   actions: {
-    initData() {
+    init() {
       let that = this;
       this.token = localStorage.getItem("bot_jwt_token") || "";
 
@@ -70,6 +70,7 @@ export const useDateStore = defineStore("storeId", {
           });
         }
 
+        that.isOnline = true;
         that.tableData = res;
         that.qqgroup = res[0].groups;
 

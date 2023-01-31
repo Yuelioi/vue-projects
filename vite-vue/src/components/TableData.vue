@@ -12,7 +12,7 @@ const {
   isOnline,
   tableData,
 
-  initData,
+  init,
   filterTableData,
   handleTableAdd,
   handleTableEdit,
@@ -20,7 +20,7 @@ const {
   handleTableSave,
 } = toRefs(useDateStore());
 
-useDateStore().initData();
+useDateStore().init();
 </script>
 <template>
   <div v-if="isOnline">

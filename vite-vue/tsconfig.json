@@ -14,7 +14,8 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
-      "views/*": ["./src/views/*"]
+      "views/*": ["./src/views/*"],
+      "router/*": ["./src/router/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

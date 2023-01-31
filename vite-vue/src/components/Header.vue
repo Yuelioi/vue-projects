@@ -48,7 +48,7 @@ function downloadCSV(filename: string) {
 }
 
 const goBack = () => {
-  window.location.href = "https://bot.yuelili.com";
+  window.location.href = "";
 };
 </script>
 
@@ -57,7 +57,12 @@ const goBack = () => {
     <template #content>
       <div class="flex items-center">
         <el-avatar :size="32" class="mr-3" :src="getAvatar" v-show="isOnline" />
-        <el-avatar :size="32" class="mr-3" :src="getAvatar" v-show="isOnline" />
+        <el-avatar
+          :size="32"
+          class="mr-3"
+          :src="getAvatar"
+          v-show="!isOnline"
+        />
 
         <el-tag style="margin-left: 0.75rem">Admin</el-tag>
       </div>
