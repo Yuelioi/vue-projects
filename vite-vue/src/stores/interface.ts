@@ -2,5 +2,6 @@ export interface UserData {
   username: string;
   keyword: string;
   reply: string;
-  groups: number[];
+  id: number;
+  groups: string[] | null;
 }

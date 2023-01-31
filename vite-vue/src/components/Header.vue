@@ -1,51 +1,54 @@
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, toRefs } from "vue";
+import { useDateStore } from "@/stores/userdata";
+const { tableData, getAvatar, isOnline } = toRefs(useDateStore());
+
 function refreshData() {}
-function exportTableToCSV(filename: any) {
-  var csv = [1];
-  var rows = document.querySelectorAll("table tr");
 
-  // for (var i = 0; i < rows.length; i++) {
-  //   var row = [],
-  //     cols = rows[i].querySelectorAll("td, th");
+function uploadCSV(filename: string) {
+  let upload_btn: HTMLElement = document.querySelector("#file") as HTMLElement;
+  upload_btn.addEventListener("change", (e: any) => {
+    let file = e.target.files[0];
+    var reader = new FileReader();
 
-  //   for (var j = 0; j < cols.length; j++) row.push();
+    reader.onload = function () {
+      var csvData = reader.result;
+      console.log(csvData);
+    };
 
-  //   csv.push(row.join(","));
-  // }
-
-  // Download CSV file
-  downloadCSV(csv.join("\n"), filename);
+    reader.readAsText(file);
+  });
+  upload_btn.click();
 }
 
-function downloadCSV(csv: BlobPart, filename: string) {
+function downloadCSV(filename: string) {
+  let csv = "\uFEFF"; //解决乱码问题
+  csv += "keyword,replay\n"; //添加表格的头
+  for (let index = 0; index < tableData.value.length; index++) {
+    const element = tableData.value[index];
+    csv += `${element.keyword},${element.reply}\n`;
+  }
+
   var csvFile;
   var downloadLink;
 
   // CSV file
-  csvFile = new Blob([csv], { type: "text/csv" });
-
+  csvFile = new Blob([csv], { type: "text/csv;charset=utf-8" });
   // Download link
   downloadLink = document.createElement("a");
-
   // File name
   downloadLink.download = filename;
-
   // Create a link to the file
   downloadLink.href = window.URL.createObjectURL(csvFile);
-
-  // Hide download link
   downloadLink.style.display = "none";
-
   // Add the link to DOM
   document.body.appendChild(downloadLink);
-
-  // Click download link
   downloadLink.click();
+  downloadLink.remove();
 }
 
 const goBack = () => {
-  alert(111);
+  window.location.href = "https://bot.yuelili.com";
 };
 </script>
 
@@ -53,26 +56,35 @@ const goBack = () => {
   <el-page-header :icon="null" title="返回主页" @back="goBack">
     <template #content>
       <div class="flex items-center">
-        <el-avatar
-          :size="32"
-          class="mr-3"
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        />
+        <el-avatar :size="32" class="mr-3" :src="getAvatar" v-show="isOnline" />
+        <el-avatar :size="32" class="mr-3" :src="getAvatar" v-show="isOnline" />
 
-        <el-tag>Default</el-tag>
+        <el-tag style="margin-left: 0.75rem">Admin</el-tag>
       </div>
     </template>
     <template #extra>
       <div class="flex items-center">
-        <el-button>Upload</el-button>
-        <el-button type="primary" class="ml-2">Download</el-button>
-        <el-button type="primary" class="ml-2" @click="refreshData"
+        <el-button @click="uploadCSV" style="margin-right: 0.75rem"
+          >上传</el-button
+        >
+        <input type="file" id="file" style="display: none" />
+        <el-button class="ml-2" @click="downloadCSV('data.csv')"
+          >下载</el-button
+        >
+        <el-button type="success" class="ml-2" @click="refreshData"
           >刷新数据</el-button
         >
       </div>
     </template>
   </el-page-header>
+  <el-divider />
 </template>
 
 <style scoped>
+.flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
 </style>
