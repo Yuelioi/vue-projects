@@ -13,8 +13,8 @@ export const useDateStore = defineStore("storeId", {
     return {
       // 所有这些属性都将自动推断其类型
       search: "",
-      username: "435826135",
-      qqgroup: ["435826135"],
+      username: "10000",
+      qqgroup: [""],
       isOnline: false,
       isEdit: false,
       isAdmin: false,
@@ -45,8 +45,25 @@ export const useDateStore = defineStore("storeId", {
     },
   },
   actions: {
+    responseToData(response: any) {
+      let sqldata = response.data["sqldata"];
+
+      let res = [];
+      for (let i = 0; i < sqldata.length; i++) {
+        let ele = sqldata[i];
+        res.push({
+          username: ele[1],
+          keyword: ele[2],
+          reply: ele[3],
+          groups: ele[4],
+          id: ele[0],
+        });
+      }
+      return res;
+    },
     init() {
       let that = this;
+
       this.token = localStorage.getItem("bot_jwt_token") || "";
 
       axios({
@@ -56,20 +73,8 @@ export const useDateStore = defineStore("storeId", {
           token: this.token,
         },
       }).then(function (response) {
-        let sqldata = response.data["sqldata"];
-
-        let res = [];
-        for (let i = 0; i < sqldata.length; i++) {
-          let ele = sqldata[i];
-          res.push({
-            username: ele[1],
-            keyword: ele[2],
-            reply: ele[3],
-            groups: ele[4],
-            id: ele[0],
-          });
-        }
-
+        const res = that.responseToData(response);
+        that.username = res[0].username;
         that.isOnline = true;
         that.tableData = res;
         that.qqgroup = res[0].groups;
@@ -116,9 +121,8 @@ export const useDateStore = defineStore("storeId", {
     handleTableSave(index: any, row: UserData) {
       for (var i = 0, l = this.tableData.length; i < l; i++) {
         var ele = this.tableData[i];
-        console.log(ele);
+
         if (ele.id == 0) {
-          console.log(ele.groups);
           axios({
             method: "get",
             url: "https://bot.yuelili.com/api/add_reply",
@@ -129,10 +133,42 @@ export const useDateStore = defineStore("storeId", {
               groups: ele.groups || "",
             },
           }).then(function (response) {});
+        } else {
+          axios({
+            method: "get",
+            url: "https://bot.yuelili.com/api/update_reply",
+            params: {
+              token: this.token,
+              key: ele.keyword,
+              reply: ele.reply,
+              groups: ele.groups || "",
+              reply_id: ele.id,
+            },
+          }).then(function (response) {
+            console.log(response.status);
+          });
         }
       }
-
+      ElMessage({
+        showClose: true,
+        message: "保存成功",
+        type: "success",
+      });
       this.isEdit = false;
+    },
+    refreshData() {
+      const that = this;
+      axios({
+        method: "get",
+        url: "https://bot.yuelili.com/api/all_reply_list",
+      }).then(function (response) {
+        that.tableData = that.responseToData(response);
+        ElMessage({
+          showClose: true,
+          message: "更新成功",
+          type: "success",
+        });
+      });
     },
     handleTableEdit() {
       this.isEdit = true;

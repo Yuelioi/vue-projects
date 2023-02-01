@@ -9,7 +9,7 @@ const { model, rules, login } = toRefs(useLoginStore());
 
 const formRef = ref<FormInstance>();
 
-// useLoginStore().init();
+useLoginStore().init();
 
 /* element-plus
  * 属性 -> prop= (size=100)
@@ -22,7 +22,6 @@ const formRef = ref<FormInstance>();
   <div class="login">
     <el-card>
       <h2>BOT 管理系统</h2>
-      <span>{{ useLoginStore().btnloading }}</span>
       <el-form class="login-form" :model="model" :rules="rules" ref="formRef">
         <el-form-item prop="username">
           <el-input

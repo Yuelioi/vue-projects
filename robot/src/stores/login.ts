@@ -8,6 +8,7 @@ import { ElMessage } from "element-plus";
 //引入Elmessage和Elloading的css样式文件
 import "element-plus/theme-chalk/el-loading.css";
 import "element-plus/theme-chalk/el-message.css";
+import { Message } from "@element-plus/icons-vue";
 
 export const useLoginStore = defineStore("loginId", {
   state: () => {
@@ -43,30 +44,36 @@ export const useLoginStore = defineStore("loginId", {
   },
   actions: {
     init() {
-      this.btnloading = true;
       onMounted(() => {
         let token = localStorage.getItem("bot_jwt_token");
 
-        // if (token) {
-        //   this.parse_token(token).then(data => {
-        //     if (data.status == 200) {
-        //       console.log("登录成功");
-        //       window.location.href += "manage";
-        //     } else {
-        //       console.log("登录失败");
-        //     }
-        //   });
-        // }
+        if (token) {
+          this.parse_token(token).then(async data => {
+            await this.simulateLogin();
+            if (data.status == 200) {
+              ElMessage({
+                showClose: true,
+                message: "登录成功",
+                type: "success",
+              });
+              window.location.href += "manage";
+            } else {
+              ElMessage({
+                showClose: true,
+                message: "token已过期 请重新登录",
+                type: "warning",
+              });
+            }
+          });
+        }
       });
     },
 
-    simulateLogin() {
+    async simulateLogin() {
       this.btnloading = true;
-      return new Promise(resolve => {
-        this.btnloading = true;
-        setTimeout(resolve, 1800);
-        this.btnloading = false;
-      });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      this.btnloading = false;
     },
     async parse_token(token: string) {
       const response = await axios.get("https://bot.yuelili.com/api/parse_token", {
@@ -89,12 +96,10 @@ export const useLoginStore = defineStore("loginId", {
       if (!formEl) {
         return;
       }
-
       let valid = await formEl.validate();
       if (!valid) {
         return;
       }
-
       await this.simulateLogin();
 
       this.verify_password(this.model.username, this.model.password).then(data => {

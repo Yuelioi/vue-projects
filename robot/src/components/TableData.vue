@@ -10,9 +10,7 @@ const {
   isEdit,
   isAdmin,
   isOnline,
-  tableData,
 
-  init,
   filterTableData,
   handleTableAdd,
   handleTableEdit,

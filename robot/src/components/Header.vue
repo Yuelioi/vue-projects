@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { ref, reactive, toRefs } from "vue";
 import { useDateStore } from "@/stores/userdata";
-const { tableData, getAvatar, isOnline } = toRefs(useDateStore());
+import { storeToRefs } from "pinia";
+import { toRefs } from "vue";
+const { tableData, getAvatar, isOnline } = storeToRefs(useDateStore());
 
-function refreshData() {}
+const { refreshData } = toRefs(useDateStore());
 
-function uploadCSV(filename: string) {
+function uploadCSV() {
   let upload_btn: HTMLElement = document.querySelector("#file") as HTMLElement;
   upload_btn.addEventListener("change", (e: any) => {
     let file = e.target.files[0];
@@ -29,19 +30,13 @@ function downloadCSV(filename: string) {
     csv += `${element.keyword},${element.reply}\n`;
   }
 
-  var csvFile;
-  var downloadLink;
+  var csvFile, downloadLink;
 
-  // CSV file
   csvFile = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  // Download link
   downloadLink = document.createElement("a");
-  // File name
   downloadLink.download = filename;
-  // Create a link to the file
   downloadLink.href = window.URL.createObjectURL(csvFile);
   downloadLink.style.display = "none";
-  // Add the link to DOM
   document.body.appendChild(downloadLink);
   downloadLink.click();
   downloadLink.remove();
@@ -56,27 +51,32 @@ const goBack = () => {
   <el-page-header :icon="null" title="返回主页" @back="goBack">
     <template #content>
       <div class="flex items-center">
-        <el-avatar :size="32" class="mr-3" :src="getAvatar" v-show="isOnline" />
-        <el-avatar
-          :size="32"
-          class="mr-3"
-          :src="getAvatar"
-          v-show="!isOnline"
-        />
+        <el-avatar :size="32" class="mr-3" :src="getAvatar" />
 
-        <el-tag style="margin-left: 0.75rem">Admin</el-tag>
+        <el-tag style="margin-left: 0.75rem" v-show="isOnline">Admin</el-tag>
+        <el-tag style="margin-left: 0.75rem" v-show="!isOnline">游客</el-tag>
       </div>
     </template>
     <template #extra>
       <div class="flex items-center">
-        <el-button @click="uploadCSV" style="margin-right: 0.75rem"
+        <el-button
+          @click="uploadCSV"
+          style="margin-right: 0.75rem"
+          :disabled="!isOnline"
           >上传</el-button
         >
         <input type="file" id="file" style="display: none" />
-        <el-button class="ml-2" @click="downloadCSV('data.csv')"
+        <el-button
+          class="ml-2"
+          @click="downloadCSV('data.csv')"
+          :disabled="!isOnline"
           >下载</el-button
         >
-        <el-button type="success" class="ml-2" @click="refreshData"
+        <el-button
+          type="success"
+          class="ml-2"
+          @click="refreshData()"
+          :disabled="!isOnline"
           >刷新数据</el-button
         >
       </div>
