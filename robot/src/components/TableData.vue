@@ -7,8 +7,6 @@ import { toRefs } from "vue";
 
 const {
   search,
-  isEdit,
-  isAdmin,
   current_page,
 
   total,
@@ -31,9 +29,10 @@ useDateStore().init();
       <el-table-column label="用户名" prop="username" />
       <el-table-column label="关键词" prop="keyword">
         <template #default="scope">
-          <span v-show="!isEdit">{{ scope.row.keyword }}</span>
+          <span v-show="!scope.row.isEditting">{{ scope.row.keyword }}</span>
           <el-input
-            v-show="isEdit"
+            autofocus="true"
+            v-show="scope.row.isEditting"
             v-model="scope.row.keyword"
             size="small"
           ></el-input>
@@ -41,9 +40,9 @@ useDateStore().init();
       </el-table-column>
       <el-table-column label="回复" prop="reply">
         <template #default="scope">
-          <span v-show="!isEdit">{{ scope.row.reply }}</span>
+          <span v-show="!scope.row.isEditting">{{ scope.row.reply }}</span>
           <el-input
-            v-show="isEdit"
+            v-show="scope.row.isEditting"
             v-model="scope.row.reply"
             size="small"
           ></el-input>
@@ -58,14 +57,17 @@ useDateStore().init();
           <el-input v-model="search" size="small" placeholder="搜索..." />
         </template>
         <template #default="scope">
-          <el-button size="small" v-show="!isEdit" @click="handleTableEdit()"
-            >Edit</el-button
+          <el-button
+            size="small"
+            v-show="!scope.row.isEditting"
+            @click="handleTableEdit(scope.row)"
+            >编辑</el-button
           >
           <el-button
-            v-show="isEdit"
+            v-show="scope.row.isEditting"
             size="small"
             type="success"
-            @click="handleTableSave(scope.$index, scope.row)"
+            @click="handleTableSave(scope.row)"
             >保存</el-button
           >
           <el-button

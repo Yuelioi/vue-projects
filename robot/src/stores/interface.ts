@@ -4,4 +4,6 @@ export interface UserData {
   reply: string;
   id: number;
   groups: string[] | null;
+  isEditting: boolean;
+  isModified: boolean;
 }

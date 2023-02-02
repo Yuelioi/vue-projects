@@ -16,12 +16,11 @@ export const useDateStore = defineStore("storeId", {
       username: "10000",
       qqgroup: [""],
       isOnline: false,
-      isEdit: false,
-      isAdmin: false,
+
       token: "",
       current_page: 1,
       total: 1,
-      page_size: 10,
+      page_size: 20,
       oldData: [],
       tableData: [
         {
@@ -30,6 +29,8 @@ export const useDateStore = defineStore("storeId", {
           reply: "",
           groups: ["123"],
           id: 1,
+          isEditting: false,
+          isModified: false,
         },
       ],
     };
@@ -66,6 +67,8 @@ export const useDateStore = defineStore("storeId", {
           reply: ele[3],
           groups: ele[4],
           id: ele[0],
+          isEditting: false,
+          isModified: false,
         });
       }
       return res;
@@ -83,7 +86,6 @@ export const useDateStore = defineStore("storeId", {
           token: this.token,
         },
       }).then(function (response) {
-        console.log(response.data);
         const res = that.responseToData(response);
         that.username = res[0].username;
         that.isOnline = true;
@@ -95,14 +97,19 @@ export const useDateStore = defineStore("storeId", {
     },
 
     handleTableAdd() {
+      this.search = "";
+      this.total += 1;
+      this.current_page = Math.trunc(this.total / this.page_size) + 1;
       this.tableData.push({
         username: this.username,
         keyword: "",
         reply: "",
         groups: this.qqgroup,
         id: 0,
+        isEditting: true,
+        isModified: true,
       });
-      this.isEdit = true;
+      this.tableData[this.total - 1].isEditting = true;
     },
     handleTableDelete(index: any, row: UserData) {
       if (row.id !== 0) {
@@ -124,54 +131,46 @@ export const useDateStore = defineStore("storeId", {
         ElMessage({
           showClose: true,
           message: "删除成功",
-          type: "success",
+          type: "warning",
         });
       }
 
       this.tableData.splice(index, 1);
     },
-    handleTableSave(index: any, row: UserData) {
-      for (var i = 0, l = this.tableData.length; i < l; i++) {
-        var ele = this.tableData[i];
-        let needRefresh = false;
-        if (ele.id == 0) {
-          needRefresh = true;
-          axios({
-            method: "get",
-            url: "https://bot.yuelili.com/api/add_reply",
-            params: {
-              token: this.token,
-              key: ele.keyword,
-              reply: ele.reply,
-              groups: ele.groups || "",
-            },
-          }).then(function (response) {});
-        } else {
-          axios({
-            method: "get",
-            url: "https://bot.yuelili.com/api/update_reply",
-            params: {
-              token: this.token,
-              key: ele.keyword,
-              reply: ele.reply,
-              groups: ele.groups || "",
-              reply_id: ele.id,
-            },
-          }).then(function (response) {
-            console.log(response.status);
-          });
-        }
-
-        if (needRefresh) {
-          this.refreshData();
-        }
+    handleTableSave(row: UserData) {
+      let needRefresh = true;
+      if (row.id == 0) {
+        axios({
+          method: "get",
+          url: "https://bot.yuelili.com/api/add_reply",
+          params: {
+            token: this.token,
+            key: row.keyword,
+            reply: row.reply,
+            groups: row.groups || "",
+          },
+        }).then(function (response) {});
+      } else {
+        axios({
+          method: "get",
+          url: "https://bot.yuelili.com/api/update_reply",
+          params: {
+            token: this.token,
+            key: row.keyword,
+            reply: row.reply,
+            groups: row.groups || "",
+            reply_id: row.id,
+          },
+        }).then(function (response) {
+          console.log(response.status);
+        });
       }
-      ElMessage({
-        showClose: true,
-        message: "保存成功",
-        type: "success",
-      });
-      this.isEdit = false;
+
+      if (needRefresh) {
+        this.refreshData();
+      }
+
+      row.isEditting = false;
     },
     refreshData() {
       const that = this;
@@ -190,8 +189,8 @@ export const useDateStore = defineStore("storeId", {
         });
       });
     },
-    handleTableEdit() {
-      this.isEdit = true;
+    handleTableEdit(row: UserData) {
+      row.isEditting = true;
     },
   },
 });
