@@ -47,6 +47,9 @@ export const useDateStore = defineStore("storeId", {
           data.reply.toLowerCase().includes(state.search.toLowerCase())
         );
       });
+      data.sort((a: any, b: any) => {
+        return a["username"] - b["username"];
+      });
       state.total = data.length;
 
       data = data.slice((state.current_page - 1) * state.page_size, (state.current_page - 1) * state.page_size + state.page_size);
