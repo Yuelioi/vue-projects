@@ -2,13 +2,13 @@ import { defineStore } from "pinia";
 import axios from "axios";
 
 import { onMounted } from "vue";
-import { storeToRefs } from "pinia";
+// import { storeToRefs } from "pinia";
 import type { FormInstance } from "element-plus";
-import { ElMessage } from "element-plus";
-//引入Elmessage和Elloading的css样式文件
-import "element-plus/theme-chalk/el-loading.css";
+import { ElMessage, ElMessageBox } from "element-plus";
+//引入element-plus的css样式文件
+import "element-plus/theme-chalk/el-message-box.css";
 import "element-plus/theme-chalk/el-message.css";
-import { Message } from "@element-plus/icons-vue";
+// import { Message } from "@element-plus/icons-vue";
 
 export const useLoginStore = defineStore("loginId", {
   state: () => {
@@ -56,7 +56,7 @@ export const useLoginStore = defineStore("loginId", {
                 message: "登录成功",
                 type: "success",
               });
-              window.location.href += "manage";
+              // window.location.href += "manage";
             } else {
               ElMessage({
                 showClose: true,
@@ -68,7 +68,16 @@ export const useLoginStore = defineStore("loginId", {
         }
       });
     },
-
+    async reset_password(username: string, password: string, new_password: string) {
+      const response = await axios.get("https://bot.yuelili.com/api/change_password", {
+        params: {
+          username: username,
+          password: password,
+          new_password: new_password,
+        },
+      });
+      return response.data;
+    },
     async simulateLogin() {
       this.btnloading = true;
       await new Promise(resolve => setTimeout(resolve, 1000));

@@ -4,8 +4,19 @@ import { storeToRefs } from "pinia";
 import { useLoginStore } from "@/stores/login";
 import type { FormInstance } from "element-plus";
 
+import { reactive } from "vue";
+
+const dialogFormVisible = ref(false);
+const formLabelWidth = "100px";
+
+const form = reactive({
+  name: "",
+  oldpassword: "",
+  newpassword: "",
+});
+
 let { btnloading } = storeToRefs(useLoginStore());
-const { model, rules, login } = toRefs(useLoginStore());
+const { model, rules, login, reset_password } = toRefs(useLoginStore());
 
 const formRef = ref<FormInstance>();
 
@@ -49,9 +60,38 @@ useLoginStore().init();
             >登录</el-button
           >
         </el-form-item>
-        <a class="forgot-password" href="https://yuelili.com/">忘记密码 ?</a>
+        <a class="forgot-password" @click="dialogFormVisible = true"
+          >忘记密码 ?</a
+        >
       </el-form>
     </el-card>
+
+    <el-dialog v-model="dialogFormVisible" title="Shipping address">
+      <el-form :model="form">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="旧密码" :label-width="formLabelWidth">
+          <el-input v-model="form.oldpassword" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="新密码" :label-width="formLabelWidth">
+          <el-input v-model="form.newpassword" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="
+              reset_password(form.name, form.oldpassword, form.newpassword)
+            "
+          >
+            提交
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <style scoped>

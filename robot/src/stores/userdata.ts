@@ -19,6 +19,10 @@ export const useDateStore = defineStore("storeId", {
       isEdit: false,
       isAdmin: false,
       token: "",
+      current_page: 1,
+      total: 1,
+      page_size: 10,
+      oldData: [],
       tableData: [
         {
           username: "",
@@ -35,13 +39,18 @@ export const useDateStore = defineStore("storeId", {
       return `https://q.qlogo.cn/g?b=qq&nk=${state.username}&s=640`;
     },
     filterTableData: state => {
-      return state.tableData.filter((data: UserData) => {
+      let data = state.tableData.filter((data: UserData) => {
         return (
           !state.search ||
           data.keyword.toLowerCase().includes(state.search.toLowerCase()) ||
           data.reply.toLowerCase().includes(state.search.toLowerCase())
         );
       });
+      state.total = data.length;
+
+      data = data.slice((state.current_page - 1) * state.page_size, (state.current_page - 1) * state.page_size + state.page_size);
+
+      return data;
     },
   },
   actions: {
@@ -61,6 +70,7 @@ export const useDateStore = defineStore("storeId", {
       }
       return res;
     },
+
     init() {
       let that = this;
 
@@ -73,6 +83,7 @@ export const useDateStore = defineStore("storeId", {
           token: this.token,
         },
       }).then(function (response) {
+        console.log(response.data);
         const res = that.responseToData(response);
         that.username = res[0].username;
         that.isOnline = true;
@@ -82,6 +93,7 @@ export const useDateStore = defineStore("storeId", {
         return res;
       });
     },
+
     handleTableAdd() {
       this.tableData.push({
         username: this.username,
@@ -121,8 +133,9 @@ export const useDateStore = defineStore("storeId", {
     handleTableSave(index: any, row: UserData) {
       for (var i = 0, l = this.tableData.length; i < l; i++) {
         var ele = this.tableData[i];
-
+        let needRefresh = false;
         if (ele.id == 0) {
+          needRefresh = true;
           axios({
             method: "get",
             url: "https://bot.yuelili.com/api/add_reply",
@@ -148,6 +161,10 @@ export const useDateStore = defineStore("storeId", {
             console.log(response.status);
           });
         }
+
+        if (needRefresh) {
+          this.refreshData();
+        }
       }
       ElMessage({
         showClose: true,
@@ -160,7 +177,10 @@ export const useDateStore = defineStore("storeId", {
       const that = this;
       axios({
         method: "get",
-        url: "https://bot.yuelili.com/api/all_reply_list",
+        url: "https://bot.yuelili.com/api/reply_list",
+        params: {
+          token: this.token,
+        },
       }).then(function (response) {
         that.tableData = that.responseToData(response);
         ElMessage({

@@ -3,14 +3,12 @@ import * as VueRouter from "vue-router";
 
 import Login from "@/router/login.vue";
 import Manage from "@/router/manage.vue";
-import About from "@/router/about.vue";
 
 // 2. 定义一些路由
 
 const routes = [
   { path: "/", component: Login },
   { path: "/manage", component: Manage },
-  { path: "/about", component: About },
 ];
 
 // 3. 创建路由实例并传递 `routes` 配置

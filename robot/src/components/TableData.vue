@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// import { storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
 import { useDateStore } from "@/stores/userdata";
 import { toRefs } from "vue";
 
@@ -9,7 +9,11 @@ const {
   search,
   isEdit,
   isAdmin,
+  current_page,
+
+  total,
   isOnline,
+  page_size,
 
   filterTableData,
   handleTableAdd,
@@ -18,6 +22,7 @@ const {
   handleTableSave,
 } = toRefs(useDateStore());
 
+const is_hide_on_single_page = true;
 useDateStore().init();
 </script>
 <template>
@@ -46,7 +51,7 @@ useDateStore().init();
       </el-table-column>
 
       <el-table-column label="群号" prop="groups" />
-      <el-table-column label="ID" prop="id" />
+      <!-- <el-table-column label="ID" prop="id" /> -->
 
       <el-table-column align="right">
         <template #header>
@@ -76,7 +81,17 @@ useDateStore().init();
       >Add</el-button
     >
   </div>
+
   <div v-else>请先登录喵</div>
+  <el-divider v-show="!is_hide_on_single_page" />
+  <el-pagination
+    background
+    :hide-on-single-page="is_hide_on_single_page"
+    :page-size="page_size"
+    :total="total"
+    v-model:current-page="current_page"
+    layout="prev, pager, next"
+  />
 </template>
 
 <style scoped>
