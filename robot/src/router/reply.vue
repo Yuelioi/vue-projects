@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { useDateStore } from "@/stores/userdata";
+import Header from "../components/Header.vue";
+import { useReplyStore } from "@/stores/reply";
 import { toRefs } from "vue";
-
-//!!! storeToRefs 和 toRefs的区别?
+import { useAuthStore } from "@/stores/auth";
+const { isOnline, token } = toRefs(useAuthStore());
 
 const {
   search,
   current_page,
 
   total,
-  isOnline,
+
   page_size,
 
   filterTableData,
@@ -18,12 +18,13 @@ const {
   handleTableEdit,
   handleTableDelete,
   handleTableSave,
-} = toRefs(useDateStore());
+} = toRefs(useReplyStore());
 
 const is_hide_on_single_page = true;
-useDateStore().init();
+useReplyStore().init(token.value);
 </script>
 <template>
+  <Header />
   <div v-if="isOnline">
     <el-table :data="filterTableData" style="width: 100%">
       <el-table-column label="用户名" prop="username" />
@@ -67,13 +68,13 @@ useDateStore().init();
             v-show="scope.row.isEditting"
             size="small"
             type="success"
-            @click="handleTableSave(scope.row)"
+            @click="handleTableSave(scope.row, token)"
             >保存</el-button
           >
           <el-button
             size="small"
             type="danger"
-            @click="handleTableDelete(scope.$index, scope.row)"
+            @click="handleTableDelete(scope.$index, scope.row, token)"
             >删除</el-button
           >
         </template>

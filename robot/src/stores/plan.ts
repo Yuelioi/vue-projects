@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { UserData } from "@/stores/interface";
+import { Reply } from "@/stores/interface";
 
 import { ElMessage } from "element-plus";
 //引入Elmessage和Elloading的css样式文件
@@ -40,7 +40,7 @@ export const useDateStore = defineStore("storeId", {
       return `https://q.qlogo.cn/g?b=qq&nk=${state.username}&s=640`;
     },
     filterTableData: state => {
-      let data = state.tableData.filter((data: UserData) => {
+      let data = state.tableData.filter((data: Reply) => {
         return (
           !state.search ||
           data.keyword.toLowerCase().includes(state.search.toLowerCase()) ||
@@ -114,7 +114,7 @@ export const useDateStore = defineStore("storeId", {
       });
       this.tableData[this.total - 1].isEditting = true;
     },
-    handleTableDelete(index: any, row: UserData) {
+    handleTableDelete(index: any, row: Reply) {
       if (row.id !== 0) {
         axios({
           method: "get",
@@ -140,7 +140,7 @@ export const useDateStore = defineStore("storeId", {
 
       this.tableData.splice(index, 1);
     },
-    handleTableSave(row: UserData) {
+    handleTableSave(row: Reply) {
       let needRefresh = true;
       if (row.id == 0) {
         axios({
@@ -192,7 +192,7 @@ export const useDateStore = defineStore("storeId", {
         });
       });
     },
-    handleTableEdit(row: UserData) {
+    handleTableEdit(row: Reply) {
       row.isEditting = true;
     },
   },

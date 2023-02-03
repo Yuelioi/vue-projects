@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import { useDateStore } from "@/stores/userdata";
+import { useReplyStore } from "@/stores/reply";
+import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import { toRefs } from "vue";
-const { tableData, getAvatar, isOnline } = storeToRefs(useDateStore());
+const { tableData } = storeToRefs(useReplyStore());
+const { isOnline, avatar, token } = toRefs(useAuthStore());
+const { refreshData } = toRefs(useReplyStore());
 
-const { refreshData } = toRefs(useDateStore());
+useAuthStore().init();
 
 function uploadCSV() {
   let upload_btn: HTMLElement = document.querySelector("#file") as HTMLElement;
@@ -51,7 +54,7 @@ const goBack = () => {
   <el-page-header :icon="null" title="返回主页" @back="goBack">
     <template #content>
       <div class="flex items-center">
-        <el-avatar :size="32" class="mr-3" :src="getAvatar" />
+        <el-avatar :size="32" class="mr-3" :src="avatar" />
 
         <el-tag style="margin-left: 0.75rem" v-show="isOnline">Admin</el-tag>
         <el-tag style="margin-left: 0.75rem" v-show="!isOnline">游客</el-tag>
@@ -75,7 +78,7 @@ const goBack = () => {
         <el-button
           type="success"
           class="ml-2"
-          @click="refreshData()"
+          @click="refreshData(token)"
           :disabled="!isOnline"
           >刷新数据</el-button
         >

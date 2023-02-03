@@ -2,9 +2,9 @@ import { defineStore } from "pinia";
 import axios from "axios";
 
 import { onMounted } from "vue";
-// import { storeToRefs } from "pinia";
+
 import type { FormInstance } from "element-plus";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 //引入element-plus的css样式文件
 import "element-plus/theme-chalk/el-message-box.css";
 import "element-plus/theme-chalk/el-message.css";
@@ -13,10 +13,9 @@ import "element-plus/theme-chalk/el-message.css";
 export const useLoginStore = defineStore("loginId", {
   state: () => {
     return {
-      // 所有这些属性都将自动推断其类型
-
       btnloading: false,
       model: { username: "", password: "" },
+      showAutoLoginDlg: true,
       rules: {
         username: [
           { required: true, message: "未填写用户名", trigger: "blur" },
@@ -37,36 +36,27 @@ export const useLoginStore = defineStore("loginId", {
       },
     };
   },
-  getters: {
-    getAvatar: state => {
-      return `https://q.qlogo.cn/g?b=qq&nk=${state.model.username}&s=640`;
-    },
-  },
+
   actions: {
     init() {
+      let that = this;
+      let token = localStorage.getItem("bot_jwt_token");
       onMounted(() => {
-        let token = localStorage.getItem("bot_jwt_token");
-
         if (token) {
-          this.parse_token(token).then(async data => {
-            await this.simulateLogin();
-            if (data.status == 200) {
-              ElMessage({
-                showClose: true,
-                message: "登录成功",
-                type: "success",
-              });
-              // window.location.href += "manage";
-            } else {
-              ElMessage({
-                showClose: true,
-                message: "token已过期 请重新登录",
-                type: "warning",
-              });
-            }
+          axios({
+            method: "get",
+            url: "https://bot.yuelili.com/api/parse_token",
+            params: {
+              token: token,
+            },
+          }).then(() => {
+            that.showAutoLoginDlg = false;
           });
         }
       });
+    },
+    AutoLogin() {
+      window.location.href += "reply";
     },
     async reset_password(username: string, password: string, new_password: string) {
       const response = await axios.get("https://bot.yuelili.com/api/change_password", {

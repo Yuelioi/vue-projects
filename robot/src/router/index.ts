@@ -2,13 +2,15 @@ import * as VueRouter from "vue-router";
 // 1. 定义路由组件.
 
 import Login from "@/router/login.vue";
-import Manage from "@/router/manage.vue";
+import Reply from "@/router/reply.vue";
+import Plan from "@/router/plan.vue";
 
 // 2. 定义一些路由
 
 const routes = [
   { path: "/", component: Login },
-  { path: "/manage", component: Manage },
+  { path: "/reply", component: Reply },
+  { path: "/plan", component: Plan },
 ];
 
 // 3. 创建路由实例并传递 `routes` 配置

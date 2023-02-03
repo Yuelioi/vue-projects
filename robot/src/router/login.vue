@@ -2,11 +2,12 @@
 import { toRefs, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useLoginStore } from "@/stores/login";
+
 import type { FormInstance } from "element-plus";
 
 import { reactive } from "vue";
 
-const dialogFormVisible = ref(false);
+const ForgetPwdDlg = ref(false);
 const formLabelWidth = "100px";
 
 const form = reactive({
@@ -16,22 +17,14 @@ const form = reactive({
 });
 
 let { btnloading } = storeToRefs(useLoginStore());
-const { model, rules, login, reset_password } = toRefs(useLoginStore());
+const { model, rules, login, reset_password, showAutoLoginDlg, AutoLogin } =
+  toRefs(useLoginStore());
 
 const formRef = ref<FormInstance>();
-
-useLoginStore().init();
-
-/* element-plus
- * 属性 -> prop= (size=100)
- * 插槽 -> :prop (:ref="formRef")
- * 内部v-model不能简写
- */
-//
 </script>
 <template #default="scope">
   <div class="login">
-    <el-card>
+    <el-card style="border-radius: 10px">
       <h2>BOT 管理系统</h2>
       <el-form class="login-form" :model="model" :rules="rules" ref="formRef">
         <el-form-item prop="username">
@@ -60,13 +53,31 @@ useLoginStore().init();
             >登录</el-button
           >
         </el-form-item>
-        <a class="forgot-password" @click="dialogFormVisible = true"
-          >忘记密码 ?</a
-        >
+        <a class="forgot-password" @click="ForgetPwdDlg = true">忘记密码 ?</a>
       </el-form>
     </el-card>
 
-    <el-dialog v-model="dialogFormVisible" title="Shipping address">
+    <el-dialog
+      v-model="showAutoLoginDlg"
+      title="状态检测"
+      width="20%"
+      style="border-radius: 5px"
+    >
+      <span>检测到登录信息,是否自动登录</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="showAutoLoginDlg = false">取消</el-button>
+          <el-button type="primary" @click="AutoLogin()"> 确定 </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+      v-model="ForgetPwdDlg"
+      title="更改密码"
+      width="25%"
+      style="border-radius: 5px"
+    >
       <el-form :model="form">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off" />
@@ -80,7 +91,7 @@ useLoginStore().init();
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button @click="ForgetPwdDlg = false">取消</el-button>
           <el-button
             type="primary"
             @click="
