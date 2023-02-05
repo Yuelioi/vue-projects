@@ -22,11 +22,7 @@ declare module '@vue/runtime-core' {
     ElTag: typeof import('element-plus/es')['ElTag']
     Footer: typeof import('./src/components/Footer.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
-    Plan: typeof import('./src/components/Plan.vue')['default']
-    PlanCP: typeof import('./src/components/PlanCP.vue')['default']
-    ReplyTableData: typeof import('./src/components/ReplyTableData.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TableData: typeof import('./src/components/TableData.vue')['default']
   }
 }

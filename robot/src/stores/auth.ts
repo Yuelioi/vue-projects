@@ -1,5 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import { onMounted } from "vue";
 
 export const useAuthStore = defineStore("authId", {
   state: () => {
@@ -16,21 +17,23 @@ export const useAuthStore = defineStore("authId", {
   },
   actions: {
     init() {
-      this.token = localStorage.getItem("bot_jwt_token") || "";
-      let that = this;
-      if (this.token) {
-        axios({
-          method: "get",
-          url: "https://bot.yuelili.com/api/parse_token",
-          params: {
-            token: this.token,
-          },
-        }).then(function (response) {
-          that.isOnline = true;
-          that.username = response.data.username;
-          return;
-        });
-      }
+      onMounted(() => {
+        this.token = localStorage.getItem("bot_jwt_token") || "";
+        let that = this;
+        if (this.token) {
+          axios({
+            method: "get",
+            url: "https://bot.yuelili.com/api/parse_token",
+            params: {
+              token: this.token,
+            },
+          }).then(function (response) {
+            that.isOnline = true;
+            that.username = response.data.username;
+            return;
+          });
+        }
+      });
     },
   },
 });
