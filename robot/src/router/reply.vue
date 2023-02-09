@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import Header from "../components/Header.vue";
+import Header from "@/components/Header.vue";
 import { useReplyStore } from "@/stores/reply";
 import { toRefs } from "vue";
 import { useAuthStore } from "@/stores/auth";
@@ -22,7 +22,6 @@ useReplyStore().init(token.value);
 </script>
 <template>
   <Header />
-  <textarea name="" id="" cols="30" rows="10">11</textarea>
   <div v-if="isOnline">
     <el-table :data="filterTableData" style="width: 100%">
       <el-table-column label="用户名" prop="username" />

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import Header from "../components/Header.vue";
+import Header from "@/components/Header.vue";
 import { useReplyStore } from "@/stores/reply";
 import { toRefs, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
@@ -25,7 +25,7 @@ const {
 function row_click(row: any, column: any, event: any) {
   console.log(row, column);
 }
-let markdown = ref("# 111");
+let markdown = ref("# 111\n## 22 \n### 3");
 let isFocus = ref(true);
 // isFocus.value = false;
 
@@ -44,34 +44,34 @@ useReplyStore().init(token.value);
 </script>
 <template #default="scope">
   <Header />
-
-  <el-tabs
-    v-show="isFocus"
-    v-model="activeName"
-    class="demo-tabs"
-    @tab-click="handleClick"
-  >
-    <div class="markdown-wrapper">
-      <div class="markdown-title">
-        <input
-          required
-          autofocus
-          type="text"
-          name="title"
-          id="title"
-          class="form-control"
-        />
-      </div>
-      <el-tab-pane label="Write" name="first">
+  <div class="markdown-wrapper">
+    <div class="markdown-title">
+      <input
+        required
+        autofocus
+        type="text"
+        name="title"
+        id="title"
+        class="form-control"
+      />
+    </div>
+    <el-tabs
+      v-show="isFocus"
+      v-model="activeName"
+      class="tabs"
+      @tab-click="handleClick"
+    >
+      <el-tab-pane label="Write" name="first" class="tabnav-tabs">
         <div class="markdown-content">
           <textarea v-model="markdown" class="form-control"></textarea>
         </div>
       </el-tab-pane>
-    </div>
-    <el-tab-pane label="Preview" name="second"
-      ><div v-html="markdownToHtml()"></div
-    ></el-tab-pane>
-  </el-tabs>
+
+      <el-tab-pane label="Preview" name="second" class="tabnav-tabs"
+        ><div v-html="markdownToHtml()"></div
+      ></el-tab-pane>
+    </el-tabs>
+  </div>
 
   <div v-if="isOnline">
     <el-table
@@ -115,39 +115,45 @@ useReplyStore().init(token.value);
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .markdown-wrapper {
   --color-canvas-default: #ffffff;
   --color-canvas-inset: #f6f8fa;
   --color-fg-default: #24292f;
   --color-border-default: #d0d7de;
   --color-accent-fg: #0969da;
+  --color-border-muted: hsla(210, 18%, 87%, 1);
   --color-primer-shadow-inset: inset 0 1px 0 rgba(208, 215, 222, 0.2);
 }
 .markdown-wrapper {
-  width: 50%;
   border: 1px solid var(--color-border-default);
+  padding: 8px;
+  border-radius: 6px;
 }
 .markdown-title {
+  padding: 5px;
   background-color: var(--color-canvas-inset);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   color: var(--color-fg-default);
 }
 .markdown-title input {
-  padding: 5px 12px;
-  font-size: 16px;
-  line-height: 20px;
   width: 100%;
-  color: var(--color-fg-default);
-  background-color: var(--color-canvas-inset);
-  vertical-align: middle;
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  border: 1px solid var(--color-border-default);
+}
+.markdown-content {
+  padding: 5px;
+}
+.markdown-content textarea {
+  width: 100%;
+  overflow: hidden;
+}
+.tabs {
+  padding: 8px;
   border-radius: 6px;
-  box-shadow: var(--color-primer-shadow-inset);
-  transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
-  transition-property: color, background-color, box-shadow, border-color;
+  border: 1px solid var(--color-border-default);
+  margin: 5px;
 }
 .form-control,
 .form-select {
@@ -170,5 +176,45 @@ useReplyStore().init(token.value);
   border-color: var(--color-accent-fg);
   outline: none;
   box-shadow: inset 0 0 0 1px var(--color-accent-fg);
+}
+
+.el-tabs__item {
+  background-color: initial;
+  border: 1px solid #0000;
+  border-bottom: 0;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  line-height: 23px;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+}
+.el-tabs__item[aria-selected="true"] {
+  background-color: var(--color-canvas-default);
+  border-color: var(--color-border-default);
+  border-radius: var(--primer-borderRadius-medium, 6px)
+    var(--primer-borderRadius-medium, 6px) 0 0;
+  color: var(--color-fg-default);
+}
+.el-tabs__header {
+  margin: 0 0 5px;
+}
+
+.markdown-wrapper h1,
+h2,
+h3,
+h4 {
+  text-align: left !important;
+}
+h1,
+h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--color-border-muted);
+}
+#pane-second h1 {
+  text-align: left;
 }
 </style>
