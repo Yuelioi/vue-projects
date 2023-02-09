@@ -109,7 +109,7 @@ export const useLoginStore = defineStore("loginId", {
             type: "success",
           });
           localStorage.setItem("bot_jwt_token", data.token);
-          window.location.href += "manage";
+          window.location.href += "reply";
         } else {
           ElMessage({
             showClose: true,

@@ -3,6 +3,7 @@ import { useReplyStore } from "@/stores/reply";
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import { toRefs } from "vue";
+
 const { tableData } = storeToRefs(useReplyStore());
 const { isOnline, avatar, token } = toRefs(useAuthStore());
 const { refreshData } = toRefs(useReplyStore());
@@ -78,7 +79,7 @@ const goBack = () => {
         <el-button
           type="success"
           class="ml-2"
-          @click="refreshData(token)"
+          @click="refreshData()"
           :disabled="!isOnline"
           >刷新数据</el-button
         >

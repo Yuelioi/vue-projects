@@ -8,11 +8,8 @@ const { isOnline, token } = toRefs(useAuthStore());
 const {
   search,
   current_page,
-
   total,
-
   page_size,
-
   filterTableData,
   handleTableAdd,
   handleTableEdit,
@@ -68,13 +65,13 @@ useReplyStore().init(token.value);
             v-show="scope.row.isEditting"
             size="small"
             type="success"
-            @click="handleTableSave(scope.row, token)"
+            @click="handleTableSave(scope.row)"
             >保存</el-button
           >
           <el-button
             size="small"
             type="danger"
-            @click="handleTableDelete(scope.$index, scope.row, token)"
+            @click="handleTableDelete(scope.$index, scope.row)"
             >删除</el-button
           >
         </template>

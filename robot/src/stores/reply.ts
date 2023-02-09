@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { Reply } from "@/stores/interface";
-
+import { onMounted } from "vue";
 import { ElMessage } from "element-plus";
 //引入Elmessage和Elloading的css样式文件
 import "element-plus/theme-chalk/el-loading.css";
@@ -18,7 +18,7 @@ export const useReplyStore = defineStore("storeId", {
       current_page: 1,
       total: 1,
       page_size: 20,
-
+      token: "",
       tableData: [
         {
           username: "",
@@ -55,9 +55,7 @@ export const useReplyStore = defineStore("storeId", {
     },
   },
   actions: {
-    responseToData(response: any) {
-      let sqldata = response.data["sqldata"];
-
+    responseToData(sqldata: any) {
       let res = [];
       for (let i = 0; i < sqldata.length; i++) {
         let ele = sqldata[i];
@@ -77,20 +75,29 @@ export const useReplyStore = defineStore("storeId", {
     init(token: string) {
       let that = this;
 
-      axios({
-        method: "get",
-        url: "https://bot.yuelili.com/api/reply_list",
-        params: {
-          token: token,
-        },
-      }).then(function (response) {
-        const res = that.responseToData(response);
-        that.username = res[0].username;
+      onMounted(() => {
+        that.token = localStorage.getItem("bot_jwt_token") || "";
+        axios({
+          method: "get",
+          url: "https://bot.yuelili.com/api/reply_list",
+          params: {
+            token: that.token,
+          },
+        }).then(function (response) {
+          const sqldata = response.data["sqldata"];
+          let res = <any>[];
+          if (sqldata) {
+            res = that.responseToData(sqldata);
+          }
 
-        that.tableData = res;
-        that.qqgroup = res[0].groups;
+          if (res.length > 0) {
+            that.username = res[0].username;
+            that.tableData = res;
+            that.qqgroup = res[0].groups;
+          }
 
-        return res;
+          return res;
+        });
       });
     },
 
@@ -109,16 +116,18 @@ export const useReplyStore = defineStore("storeId", {
       });
       this.tableData[this.total - 1].isEditting = true;
     },
-    handleTableDelete(index: any, row: Reply, token: string) {
+    handleTableDelete(index: any, row: Reply) {
+      const that = this;
       if (row.id !== 0) {
         axios({
           method: "get",
           url: "https://bot.yuelili.com/api/delete_reply",
           params: {
             reply_id: row.id,
-            token: token,
+            token: this.token,
           },
         }).then(function (response) {
+          that.refreshData();
           ElMessage({
             showClose: true,
             message: "删除成功",
@@ -135,14 +144,14 @@ export const useReplyStore = defineStore("storeId", {
 
       this.tableData.splice(index, 1);
     },
-    handleTableSave(row: Reply, token: string) {
+    handleTableSave(row: Reply) {
       let needRefresh = true;
       if (row.id == 0) {
         axios({
           method: "get",
           url: "https://bot.yuelili.com/api/add_reply",
           params: {
-            token: token,
+            token: this.token,
             key: row.keyword,
             reply: row.reply,
             groups: row.groups || "",
@@ -153,7 +162,7 @@ export const useReplyStore = defineStore("storeId", {
           method: "get",
           url: "https://bot.yuelili.com/api/update_reply",
           params: {
-            token: token,
+            token: this.token,
             key: row.keyword,
             reply: row.reply,
             groups: row.groups || "",
@@ -165,26 +174,26 @@ export const useReplyStore = defineStore("storeId", {
       }
 
       if (needRefresh) {
-        this.refreshData(token);
-      }
-
-      row.isEditting = false;
-    },
-    refreshData(token: string) {
-      const that = this;
-      axios({
-        method: "get",
-        url: "https://bot.yuelili.com/api/reply_list",
-        params: {
-          token: token,
-        },
-      }).then(function (response) {
-        that.tableData = that.responseToData(response);
+        this.refreshData();
         ElMessage({
           showClose: true,
           message: "更新成功",
           type: "success",
         });
+      }
+
+      row.isEditting = false;
+    },
+    refreshData() {
+      const that = this;
+      axios({
+        method: "get",
+        url: "https://bot.yuelili.com/api/reply_list",
+        params: {
+          token: this.token,
+        },
+      }).then(function (response) {
+        that.tableData = that.responseToData(response.data["sqldata"]);
       });
     },
     handleTableEdit(row: Reply) {
