@@ -77,9 +77,10 @@ export const useReplyStore = defineStore("storeId", {
 
       onMounted(() => {
         that.token = localStorage.getItem("bot_jwt_token") || "";
+
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/reply_list",
+          url: "https://bot.yuelili.com/api/reply/list",
           params: {
             token: that.token,
           },
@@ -121,7 +122,7 @@ export const useReplyStore = defineStore("storeId", {
       if (row.id !== 0) {
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/delete_reply",
+          url: "https://bot.yuelili.com/api/reply/delete",
           params: {
             reply_id: row.id,
             token: this.token,
@@ -149,7 +150,7 @@ export const useReplyStore = defineStore("storeId", {
       if (row.id == 0) {
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/add_reply",
+          url: "https://bot.yuelili.com/api/reply/add",
           params: {
             token: this.token,
             key: row.keyword,
@@ -160,7 +161,7 @@ export const useReplyStore = defineStore("storeId", {
       } else {
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/update_reply",
+          url: "https://bot.yuelili.com/api/reply/update",
           params: {
             token: this.token,
             key: row.keyword,
@@ -188,7 +189,7 @@ export const useReplyStore = defineStore("storeId", {
       const that = this;
       axios({
         method: "get",
-        url: "https://bot.yuelili.com/api/reply_list",
+        url: "https://bot.yuelili.com/api/reply/list",
         params: {
           token: this.token,
         },

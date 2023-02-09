@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { Reply } from "@/stores/interface";
-
+import { Plan } from "@/stores/interface";
+import { onMounted } from "vue";
 import { ElMessage } from "element-plus";
 //引入Elmessage和Elloading的css样式文件
 import "element-plus/theme-chalk/el-loading.css";
 import "element-plus/theme-chalk/el-message.css";
 
-export const useDateStore = defineStore("storeId", {
+export const usePlanStore = defineStore("storeId", {
   // 推荐使用 完整类型推断的箭头函数
   state: () => {
     return {
@@ -15,19 +15,18 @@ export const useDateStore = defineStore("storeId", {
       search: "",
       username: "10000",
       qqgroup: [""],
-      isOnline: false,
-
-      token: "",
       current_page: 1,
       total: 1,
       page_size: 20,
-      oldData: [],
+      token: "",
       tableData: [
         {
           username: "",
-          keyword: "",
-          reply: "",
-          groups: ["123"],
+          type: "",
+          create_date: "",
+          finish_date: "",
+          status: "",
+          tag: "",
           id: 1,
           isEditting: false,
           isModified: false,
@@ -40,11 +39,11 @@ export const useDateStore = defineStore("storeId", {
       return `https://q.qlogo.cn/g?b=qq&nk=${state.username}&s=640`;
     },
     filterTableData: state => {
-      let data = state.tableData.filter((data: Reply) => {
+      let data = state.tableData.filter((data: Plan | any) => {
         return (
           !state.search ||
-          data.keyword.toLowerCase().includes(state.search.toLowerCase()) ||
-          data.reply.toLowerCase().includes(state.search.toLowerCase())
+          data.create_date.toLowerCase().includes(state.search.toLowerCase()) ||
+          data.create_date.toLowerCase().includes(state.search.toLowerCase())
         );
       });
       data.sort((a: any, b: any) => {
@@ -58,17 +57,13 @@ export const useDateStore = defineStore("storeId", {
     },
   },
   actions: {
-    responseToData(response: any) {
-      let sqldata = response.data["sqldata"];
-
+    responseToData(sqldata: any) {
       let res = [];
       for (let i = 0; i < sqldata.length; i++) {
         let ele = sqldata[i];
         res.push({
           username: ele[1],
-          keyword: ele[2],
-          reply: ele[3],
-          groups: ele[4],
+
           id: ele[0],
           isEditting: false,
           isModified: false,
@@ -77,25 +72,32 @@ export const useDateStore = defineStore("storeId", {
       return res;
     },
 
-    init() {
+    init(token: string) {
       let that = this;
 
-      this.token = localStorage.getItem("bot_jwt_token") || "";
+      onMounted(() => {
+        that.token = localStorage.getItem("bot_jwt_token") || "";
+        axios({
+          method: "get",
+          url: "https://bot.yuelili.com/api/reply/list",
+          params: {
+            token: that.token,
+          },
+        }).then(function (response) {
+          const sqldata = response.data["sqldata"];
+          let res = <any>[];
+          if (sqldata) {
+            res = that.responseToData(sqldata);
+          }
 
-      axios({
-        method: "get",
-        url: "https://bot.yuelili.com/api/reply_list",
-        params: {
-          token: this.token,
-        },
-      }).then(function (response) {
-        const res = that.responseToData(response);
-        that.username = res[0].username;
-        that.isOnline = true;
-        that.tableData = res;
-        that.qqgroup = res[0].groups;
+          if (res.length > 0) {
+            that.username = res[0].username;
+            that.tableData = res;
+            that.qqgroup = res[0].groups;
+          }
 
-        return res;
+          return res;
+        });
       });
     },
 
@@ -105,25 +107,29 @@ export const useDateStore = defineStore("storeId", {
       this.current_page = Math.trunc(this.total / this.page_size) + 1;
       this.tableData.push({
         username: this.username,
-        keyword: "",
-        reply: "",
-        groups: this.qqgroup,
-        id: 0,
-        isEditting: true,
-        isModified: true,
+        type: "",
+        create_date: "",
+        finish_date: "",
+        status: "",
+        tag: "",
+        id: 1,
+        isEditting: false,
+        isModified: false,
       });
       this.tableData[this.total - 1].isEditting = true;
     },
-    handleTableDelete(index: any, row: Reply) {
+    handleTableDelete(index: any, row: Plan) {
+      const that = this;
       if (row.id !== 0) {
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/delete_reply",
+          url: "https://bot.yuelili.com/api/reply/delete",
           params: {
             reply_id: row.id,
             token: this.token,
           },
         }).then(function (response) {
+          that.refreshData();
           ElMessage({
             showClose: true,
             message: "删除成功",
@@ -140,29 +146,22 @@ export const useDateStore = defineStore("storeId", {
 
       this.tableData.splice(index, 1);
     },
-    handleTableSave(row: Reply) {
+    handleTableSave(row: Plan) {
       let needRefresh = true;
       if (row.id == 0) {
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/add_reply",
+          url: "https://bot.yuelili.com/api/reply/add",
           params: {
             token: this.token,
-            key: row.keyword,
-            reply: row.reply,
-            groups: row.groups || "",
           },
         }).then(function (response) {});
       } else {
         axios({
           method: "get",
-          url: "https://bot.yuelili.com/api/update_reply",
+          url: "https://bot.yuelili.com/api/reply/update",
           params: {
             token: this.token,
-            key: row.keyword,
-            reply: row.reply,
-            groups: row.groups || "",
-            reply_id: row.id,
           },
         }).then(function (response) {
           console.log(response.status);
@@ -171,6 +170,11 @@ export const useDateStore = defineStore("storeId", {
 
       if (needRefresh) {
         this.refreshData();
+        ElMessage({
+          showClose: true,
+          message: "更新成功",
+          type: "success",
+        });
       }
 
       row.isEditting = false;
@@ -179,20 +183,15 @@ export const useDateStore = defineStore("storeId", {
       const that = this;
       axios({
         method: "get",
-        url: "https://bot.yuelili.com/api/reply_list",
+        url: "https://bot.yuelili.com/api/reply/list",
         params: {
           token: this.token,
         },
       }).then(function (response) {
-        that.tableData = that.responseToData(response);
-        ElMessage({
-          showClose: true,
-          message: "更新成功",
-          type: "success",
-        });
+        // that.tableData = that.responseToData(response.data["sqldata"]);
       });
     },
-    handleTableEdit(row: Reply) {
+    handleTableEdit(row: Plan) {
       row.isEditting = true;
     },
   },
