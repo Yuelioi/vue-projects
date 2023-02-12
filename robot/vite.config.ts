@@ -7,32 +7,31 @@ import { resolve } from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
-  ],
-  css: {
-    preprocessorOptions: {
-      less: {
-        math: "always", // 括号内才使用数学计算
-        globalVars: {
-          // 全局变量
-          mainColor: "red",
-        },
-      },
-    },
-  },
-  resolve: {
-    // 配置别名,在tsconfig.json 也要做类似的配置
-    alias: [
-      { find: "@", replacement: resolve(__dirname, "./src") },
-
-      { find: "@style", replacement: resolve(__dirname, "./src/assets/style") },
+    plugins: [
+        vue(),
+        AutoImport({
+            resolvers: [ElementPlusResolver()],
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()],
+        }),
     ],
-  },
+    css: {
+        preprocessorOptions: {
+            less: {
+                math: "always", // 括号内才使用数学计算
+                globalVars: {
+                    // 全局变量
+                    mainColor: "red",
+                },
+            },
+        },
+    },
+    resolve: {
+        // 配置别名,在tsconfig.json 也要做类似的配置
+        alias: [
+            { find: "@", replacement: resolve(__dirname, "./src") },
+            { find: "@style", replacement: resolve(__dirname, "./src/assets/css") },
+        ],
+    },
 });

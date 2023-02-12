@@ -2,250 +2,441 @@
 import { toRefs, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useLoginStore } from "@/stores/login";
-
 import type { FormInstance } from "element-plus";
-
 import { reactive } from "vue";
+
+import "@style/style.css";
 
 const ForgetPwdDlg = ref(false);
 const formLabelWidth = "100px";
 
 const form = reactive({
-  name: "",
-  oldpassword: "",
-  newpassword: "",
+    name: "",
+    oldpassword: "",
+    newpassword: "",
 });
 
-let { btnloading } = storeToRefs(useLoginStore());
+let { btnloading, yiyan } = storeToRefs(useLoginStore());
 const { model, rules, login, reset_password, showAutoLoginDlg, AutoLogin } =
-  toRefs(useLoginStore());
+    toRefs(useLoginStore());
+
+useLoginStore().init();
+
+function switch_card() {
+    let switchCtn: any = document.querySelector("#switch-cnt");
+    let switchC1: any = document.querySelector("#switch-c1");
+    let switchC2: any = document.querySelector("#switch-c2");
+    let switchCircle = document.querySelectorAll(".switch__circle");
+    let switchBtn = document.querySelectorAll(".switch-btn");
+    let card1: any = document.querySelector(".card1");
+    let card2: any = document.querySelector(".card2");
+
+    switchCtn.classList.add("is-gx");
+    setTimeout(function () {
+        switchCtn.classList.remove("is-gx");
+    }, 1500);
+
+    switchCtn.classList.toggle("is-txr");
+    switchCircle[0].classList.toggle("is-txr");
+    switchCircle[1].classList.toggle("is-txr");
+
+    switchC1.classList.toggle("is-hidden");
+    switchC2.classList.toggle("is-hidden");
+    card1.classList.toggle("is-txl");
+    card2.classList.toggle("is-txl");
+    card2.classList.toggle("is-z200");
+}
 
 const formRef = ref<FormInstance>();
 </script>
 <template #default="scope">
-  <div class="login">
-    <el-card style="border-radius: 10px">
-      <h2>BOT 管理系统</h2>
-      <el-form class="login-form" :model="model" :rules="rules" ref="formRef">
-        <el-form-item prop="username">
-          <el-input
-            prefix-icon="User"
-            v-model="model.username"
-            placeholder="用户名"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            prefix-icon="Flag"
-            v-model="model.password"
-            placeholder="密码"
-            type="password"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            :loading="btnloading"
-            class="login-button"
-            type="primary"
-            native-type="submit"
-            @click="login(formRef)"
-            block
-            >登录</el-button
-          >
-        </el-form-item>
-        <a class="forgot-password" @click="ForgetPwdDlg = true">忘记密码 ?</a>
-      </el-form>
-    </el-card>
+    <div id="login-page">
+        <div class="login">
+            <div class="card1 card">
+                <el-card style="border-radius: 10px" shadow="never">
+                    <h2 class="title">登录</h2>
+                    <el-form
+                        class="login-form"
+                        :model="model"
+                        :rules="rules"
+                        ref="formRef"
+                    >
+                        <el-form-item prop="username">
+                            <el-input
+                                prefix-icon="User"
+                                v-model="model.username"
+                                placeholder="用户名(QQ)"
+                            ></el-input>
+                        </el-form-item>
 
-    <el-dialog
-      v-model="showAutoLoginDlg"
-      title="状态检测"
-      width="20%"
-      style="border-radius: 5px"
-    >
-      <span>检测到登录信息,是否自动登录</span>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="showAutoLoginDlg = false">取消</el-button>
-          <el-button type="primary" @click="AutoLogin()"> 确定 </el-button>
-        </span>
-      </template>
-    </el-dialog>
+                        <el-form-item prop="password">
+                            <el-input
+                                prefix-icon="Flag"
+                                v-model="model.password"
+                                placeholder="密码"
+                                type="password"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button
+                                :loading="btnloading"
+                                class="login-button"
+                                type="primary"
+                                native-type="submit"
+                                @click="login(formRef)"
+                                block
+                                >登录</el-button
+                            >
+                        </el-form-item>
+                        <a class="forgot-password" @click="ForgetPwdDlg = true"
+                            >忘记密码 ?</a
+                        >
+                    </el-form>
+                </el-card>
+            </div>
+            <div class="card2 card">
+                <el-card style="border-radius: 10px" shadow="never">
+                    <h2 class="title">注册</h2>
+                    <el-form
+                        class="login-form"
+                        :model="model"
+                        :rules="rules"
+                        ref="formRef"
+                    >
+                        <el-form-item prop="username">
+                            <el-input
+                                prefix-icon="User"
+                                v-model="model.username"
+                                placeholder="用户名(QQ)"
+                            ></el-input>
+                        </el-form-item>
 
-    <el-dialog
-      v-model="ForgetPwdDlg"
-      title="更改密码"
-      width="25%"
-      style="border-radius: 5px"
-    >
-      <el-form :model="form">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="旧密码" :label-width="formLabelWidth">
-          <el-input v-model="form.oldpassword" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="新密码" :label-width="formLabelWidth">
-          <el-input v-model="form.newpassword" autocomplete="off" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="ForgetPwdDlg = false">取消</el-button>
-          <el-button
-            type="primary"
-            @click="
-              reset_password(form.name, form.oldpassword, form.newpassword)
-            "
-          >
-            提交
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
-  </div>
+                        <el-form-item prop="password">
+                            <el-input
+                                prefix-icon="Flag"
+                                v-model="model.password"
+                                placeholder="昵称"
+                                type="password"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item prop="password">
+                            <el-input
+                                prefix-icon="Flag"
+                                v-model="model.password"
+                                placeholder="密码"
+                                type="password"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button
+                                :loading="btnloading"
+                                class="login-button"
+                                type="primary"
+                                native-type="submit"
+                                block
+                                >注册</el-button
+                            >
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </div>
+
+            <div class="switch" id="switch-cnt">
+                <div class="switch__circle"></div>
+                <div class="switch__circle switch__circle--t"></div>
+                <div class="switch__container" id="switch-c1">
+                    <h2 class="switch__title title">欢迎回来喵!</h2>
+                    <p class="switch__description description">
+                        {{ yiyan }}
+                    </p>
+                    <el-button @click="switch_card"> 注册 </el-button>
+                </div>
+                <div class="switch__container is-hidden" id="switch-c2">
+                    <h2 class="switch__title title">你好喵</h2>
+                    <p class="switch__description description">
+                        暂时不支持注册 请联系月离离开通!
+                    </p>
+                    <el-button @click="switch_card"> 登录 </el-button>
+                </div>
+            </div>
+
+            <el-dialog v-model="showAutoLoginDlg" title="状态检测" width="20%">
+                <span>检测到登录信息,是否自动登录</span>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="showAutoLoginDlg = false"
+                            >取消</el-button
+                        >
+                        <el-button type="primary" @click="AutoLogin()">
+                            确定
+                        </el-button>
+                    </span>
+                </template>
+            </el-dialog>
+
+            <el-dialog
+                v-model="ForgetPwdDlg"
+                title="更改密码"
+                width="25%"
+                style="font-size=24px"
+            >
+                <el-form :model="form">
+                    <el-form-item label="用户名" :label-width="formLabelWidth">
+                        <el-input
+                            v-model="form.name"
+                            autocomplete="off"
+                            class="form__input"
+                        />
+                    </el-form-item>
+                    <el-form-item label="旧密码" :label-width="formLabelWidth">
+                        <el-input
+                            v-model="form.oldpassword"
+                            autocomplete="off"
+                            class="form__input"
+                            id="form__input"
+                        />
+                    </el-form-item>
+                    <el-form-item label="新密码" :label-width="formLabelWidth">
+                        <el-input
+                            v-model="form.newpassword"
+                            autocomplete="off"
+                            class="form__input"
+                        />
+                    </el-form-item>
+                </el-form>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="ForgetPwdDlg = false"
+                            >取消</el-button
+                        >
+                        <el-button
+                            type="primary"
+                            @click="
+                                reset_password(
+                                    form.name,
+                                    form.oldpassword,
+                                    form.newpassword
+                                )
+                            "
+                        >
+                            提交
+                        </el-button>
+                    </span>
+                </template>
+            </el-dialog>
+        </div>
+    </div>
 </template>
+<style>
+html {
+    overflow: hidden;
+}
+#login-page {
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+}
+</style>
 <style scoped>
-#app {
-  font-family: Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.el-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+.el-card {
+    background-color: var(--main-bg-color);
+    border: none;
 }
 .login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-}
-body {
-  margin: 0;
-  padding: 0;
-  background: #102a43;
-  background-image: url("https://uploads.codesandbox.io/uploads/user/c3fb8e8a-35ea-4232-b5d6-0f3c5373510b/LVs7-dots.png");
-  background-size: contain;
-}
-.footer,
-.header {
-  padding: 20px 20px;
-  color: #f0f4f8;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.footer h1,
-.header h1,
-.footer h2,
-.header h2,
-.footer h3,
-.header h3 {
-  color: #f0f4f8;
-  padding: 0;
-  margin: 0;
-}
-.footer .links,
-.header .links {
-  display: flex;
-  font-family: "Open Sans";
-}
-.footer .links span,
-.header .links span {
-  padding: 0 10px;
-  font-size: 18px;
-  border-right: 1px solid #9fb3c8;
-}
-.footer .links span:last-child,
-.header .links span:last-child {
-  border-right: none;
-}
-.footer .version,
-.header .version {
-  font-family: "Open Sans";
-  padding: 0 10px;
-  color: #9fb3c8;
-  font-size: 12px;
-  margin-top: 5px;
-}
-.header {
-  padding: 10px 20px;
-}
-.header .logo {
-  font-family: "Open Sans";
-  letter-spacing: 3px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-.header .logo .part-2 {
-  color: #d64545;
+    position: relative;
+    width: 1000px;
+    min-width: 1000px;
+    min-height: 600px;
+    height: 600px;
+    padding: 25px;
+    background-color: var(--main-bg-color);
+    box-shadow: var(--main-box-shadow-lg);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-.el-button--primary {
-  background: #007c89;
-  border-color: #007c89;
+.login :deep(.switch) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 400px;
+    padding: 50px;
+    z-index: 200;
+    transition: 1.25s;
+    background-color: var(--main-bg-color);
+    overflow: hidden;
+    box-shadow: var(--main-box-shadow-sm);
 }
-.el-button--primary:hover,
-.el-button--primary.active,
-.el-button--primary:focus {
-  background: #009cad;
-  border-color: #009cad;
+.login :deep(.switch__circle) {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background-color: var(--main-bg-color);
+    box-shadow: var(--main-box-shadow-md);
+    bottom: -60%;
+    left: -60%;
+    transition: 1.25s;
 }
-.el-card__body {
-  width: 100%;
-}
-.login .el-input__inner:hover {
-  border-color: #007c89;
-}
-.login .el-input__prefix {
-  background: #eeedea;
-  left: 0;
-  height: calc(100% - 2px);
-  left: 1px;
-  top: 1px;
-  border-radius: 3px;
-}
-.login .el-input__prefix .el-input__icon {
-  width: 30px;
-}
-.login .el-input input {
-  height: 40px;
-  line-height: 40px;
-  padding-left: 15px;
-}
-.login .el-card {
-  padding-top: 0;
-  padding-bottom: 30px;
-}
-h2 {
-  font-family: "Open Sans";
-  letter-spacing: 1px;
-  font-family: Roboto, sans-serif;
-  padding-bottom: 20px;
-}
-a {
-  color: #007c89;
-  text-decoration: none;
-}
-a:hover,
-a:active,
-a:focus {
-  color: #009cad;
-}
-.login .el-card {
-  width: 340px;
-  display: flex;
-  justify-content: center;
+.switch__circle--t {
+    top: -30%;
+    left: 60%;
+    width: 300px;
+    height: 300px;
 }
 
-.login-button {
-  width: 100%;
-  margin-top: 30px;
+.login :deep(.el-dialog) {
+    background-color: var(--main-bg-color);
+    box-shadow: var(--main-box-shadow-sm);
+    border-radius: 15px !important;
 }
-.el-input__wrapper {
-  padding: 1px 2px;
+
+.switch__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    width: 400px;
+    padding: 50px 55px;
+    transition: 1.25s;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 600px;
+    height: 100%;
+    padding: 25px;
+    background-color: var(--main-bg-color);
+    transition: 1.25s;
+}
+.card1 {
+    z-index: 100;
+    left: calc(100% - 600px);
+}
+
+.card2 {
+    z-index: 0;
+    left: calc(100% - 600px);
+}
+.title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 3;
+    color: var(--main-title-color);
+}
+.description {
+    font-size: 14px;
+    letter-spacing: 0.25px;
+    line-height: 1.6;
+    text-align: left;
+    text-indent: 2em;
+}
+.forgot-password {
+    /* border-bottom: 1px solid #9b9b9b69; */
+    color: var(--main-title-color);
+    font-size: 15px;
+    margin-top: 25px;
+    border-bottom: var(--main-border);
+    line-height: 2;
+}
+.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    transition: 1.25s;
+}
+.login :deep(.el-input__wrapper) {
+    width: 350px;
+    height: 40px;
+    margin: 4px 0;
+    padding-left: 25px;
+    font-size: 16px;
+    letter-spacing: 0.15px;
+    border: none;
+    outline: none;
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--main-bg-color);
+    transition: 0.25s ease;
+    border-radius: 8px;
+    box-shadow: var(--main-box-shadow-xs);
+}
+.login :deep(.el-dialog__headerbtn:focus-visible) {
+    outline: none;
+    width: 64px;
+    height: 64px;
+}
+.login :deep(.el-dialog__title) {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 2;
+    color: var(--main-title-color);
+}
+.login :deep(.el-dialog__header) {
+    padding-top: 48px;
+}
+.login :deep(.el-dialog__close) {
+    font-size: 32px;
+}
+.el-button {
+    width: 180px;
+    height: 50px;
+    border-radius: 25px;
+    margin-top: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.15px;
+    background-color: var(--btn-bg-color);
+    color: #f9f9f9;
+    box-shadow: var(--btn-box-shadow);
+    border: none;
+    outline: none;
+}
+
+.login :deep(.is-txr) {
+    left: calc(100% - 400px);
+    transition: 1.25s;
+    transform-origin: left;
+}
+.is-txl {
+    left: 0;
+    transition: 1.25s;
+    transform-origin: right;
+}
+
+.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    transition: 1.25s;
+}
+.is-z200 {
+    z-index: 200;
+    transition: 1.25s;
 }
 </style>
