@@ -68,28 +68,7 @@ const goBack = () => {
             </div>
         </template>
         <template #extra>
-            <div class="flex items-center">
-                <el-button
-                    @click="uploadCSV"
-                    style="margin-right: 0.75rem"
-                    :disabled="!isOnline"
-                    >上传</el-button
-                >
-                <input type="file" id="file" style="display: none" />
-                <el-button
-                    class="ml-2"
-                    @click="downloadCSV('data.csv')"
-                    :disabled="!isOnline"
-                    >下载</el-button
-                >
-                <el-button
-                    type="success"
-                    class="ml-2"
-                    @click="refreshData()"
-                    :disabled="!isOnline"
-                    >刷新数据</el-button
-                >
-            </div>
+            <div class="flex items-center"></div>
         </template>
     </el-page-header>
     <el-divider />

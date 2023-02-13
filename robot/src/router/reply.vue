@@ -27,7 +27,9 @@ useReplyStore().init(token.value);
             <el-table
                 :data="filterTableData"
                 style="width: 100%"
-                :header-cell-class-name="'table-header'"
+                :header-row-style="{
+                    background: 'var(--main-bg-color)',
+                }"
             >
                 <el-table-column label="用户名" prop="username" />
                 <el-table-column label="关键词" prop="keyword">
@@ -68,25 +70,27 @@ useReplyStore().init(token.value);
                         />
                     </template>
                     <template #default="scope">
-                        <el-button
-                            size="small"
+                        <el-icon
+                            :size="20"
                             v-show="!scope.row.isEditting"
                             @click="handleTableEdit(scope.row)"
-                            >编辑</el-button
                         >
-                        <el-button
+                            <Edit />
+                        </el-icon>
+
+                        <el-icon
+                            :size="20"
                             v-show="scope.row.isEditting"
-                            size="small"
-                            type="success"
+                            style="margin-left: 8px"
                             @click="handleTableSave(scope.row)"
-                            >保存</el-button
-                        >
-                        <el-button
-                            size="small"
-                            type="danger"
+                            ><Check
+                        /></el-icon>
+                        <el-icon
+                            :size="20"
+                            style="margin-left: 8px"
                             @click="handleTableDelete(scope.$index, scope.row)"
-                            >删除</el-button
-                        >
+                            ><Delete
+                        /></el-icon>
                     </template>
                 </el-table-column>
             </el-table>
@@ -110,20 +114,57 @@ useReplyStore().init(token.value);
         />
     </div>
 </template>
+<style>
+th.el-table__cell.table-header {
+    background-color: var(--main-bg-color);
+    box-shadow: inset 3px 3px 5px #f9f9f9, inset -3px -2px 1px #c9c9c9;
+}
+</style>
 
 <style scoped>
+span {
+    word-break: keep-all;
+    white-space: nowrap;
+}
 #reply-page {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
 }
+
+:deep(.el-input__wrapper) {
+    box-shadow: inset 1px 1px 2px #d1d9e6, inset -1px -1px 2px #f9f9f9;
+}
+:deep(table.el-table__body) {
+    border-collapse: collapse;
+}
 :deep(.el-table) {
     box-shadow: var(--main-box-shadow-lg);
 }
 :deep(.el-table tr) {
     background-color: var(--main-bg-color);
-    box-shadow: inset 3px 3px 5px #f9f9f9, inset -3px -2px 1px #c9c9c9;
+    border-top: 0.125rem solid #e7e7e7;
+    border-bottom: 0.125rem solid #fdfdfd;
     height: 50px;
+}
+:deep(.el-table th.el-table__cell) {
+    background: transparent;
+}
+
+:deep(.el-input__inner) {
+    height: 30px;
+    padding-left: 10px;
+}
+:deep(.el-input__wrapper.is-focus) {
+    box-shadow: 0 0 0 1px var(--el-input-hover-border-color) inset;
+}
+:deep(.el-table__body tr:hover > td.el-table__cell) {
+    border-top: 0.125rem solid #e3e3e3;
+    border-bottom: 0.125rem solid #fdfdfd;
+}
+
+:deep(.el-table__empty-block) {
+    background: var(--main-bg-color);
 }
 </style>

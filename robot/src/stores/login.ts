@@ -43,7 +43,6 @@ export const useLoginStore = defineStore("loginId", {
         init() {
             let that = this;
             let token = localStorage.getItem("bot_jwt_token");
-            console.log(222)
             onMounted(() => {
                 axios({
                     method: "get",

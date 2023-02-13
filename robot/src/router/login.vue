@@ -5,7 +5,7 @@ import { useLoginStore } from "@/stores/login";
 import type { FormInstance } from "element-plus";
 import { reactive } from "vue";
 
-import "@style/style.css";
+import "@style/element-plus-custom.css";
 
 const ForgetPwdDlg = ref(false);
 const formLabelWidth = "100px";
@@ -227,11 +227,10 @@ const formRef = ref<FormInstance>();
         </div>
     </div>
 </template>
+
 <style>
-html {
-    overflow: hidden;
-}
 #login-page {
+    overflow: hidden;
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
@@ -246,7 +245,37 @@ html {
     color: var(--main-text-color);
 }
 </style>
+
 <style scoped>
+a:hover {
+    color: #7e7e7e;
+}
+
+.login :deep(.el-table th.el-table__cell) {
+    background-color: var(--main-bg-color);
+}
+
+.el-button:hover {
+    background-color: #7d97e7;
+}
+
+:deep(.el-input__wrapper) {
+    box-shadow: inset 1px 1px 2px #d1d9e6, inset -1px -1px 2px #f9f9f9;
+}
+:deep(.el-dialog__footer) {
+    padding-bottom: 25px;
+}
+
+.el-dialog__footer .el-button {
+    width: 72px;
+    height: 32px;
+    margin-top: 5px;
+}
+.dialog-footer {
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 15px;
+}
 .el-form {
     display: flex;
     justify-content: center;
@@ -255,10 +284,7 @@ html {
     width: 100%;
     height: 100%;
 }
-.el-card {
-    background-color: var(--main-bg-color);
-    border: none;
-}
+
 .login {
     position: relative;
     width: 1000px;
@@ -294,7 +320,7 @@ html {
     height: 500px;
     border-radius: 50%;
     background-color: var(--main-bg-color);
-    box-shadow: var(--main-box-shadow-md);
+    box-shadow: var(--main-box-shadow-md-in);
     bottom: -60%;
     left: -60%;
     transition: 1.25s;
@@ -308,7 +334,7 @@ html {
 
 .login :deep(.el-dialog) {
     background-color: var(--main-bg-color);
-    box-shadow: var(--main-box-shadow-sm);
+    box-shadow: var(--main-box-shadow-xs);
     border-radius: 15px !important;
 }
 
@@ -377,32 +403,8 @@ html {
     margin: 4px 0;
     padding-left: 25px;
     font-size: 16px;
-    letter-spacing: 0.15px;
-    border: none;
-    outline: none;
-    font-family: "Montserrat", sans-serif;
-    background-color: var(--main-bg-color);
-    transition: 0.25s ease;
-    border-radius: 8px;
-    box-shadow: var(--main-box-shadow-xs);
 }
-.login :deep(.el-dialog__headerbtn:focus-visible) {
-    outline: none;
-    width: 64px;
-    height: 64px;
-}
-.login :deep(.el-dialog__title) {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 2;
-    color: var(--main-title-color);
-}
-.login :deep(.el-dialog__header) {
-    padding-top: 48px;
-}
-.login :deep(.el-dialog__close) {
-    font-size: 32px;
-}
+
 .el-button {
     width: 180px;
     height: 50px;
