@@ -74,6 +74,13 @@ const goBack = () => {
     <el-divider />
 </template>
 
+<style lang="css">
+@import "@style/element-plus-custom.css";
+@import "@style/ele-input.css";
+@import "@style/ele-table.css";
+@import "@style/ele-dialog.css";
+</style>
+
 <style scoped>
 .flex {
     display: flex;

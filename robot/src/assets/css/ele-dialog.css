@@ -1,0 +1,17 @@
+.el-dialog__headerbtn:focus-visible {
+  outline: none;
+  width: 64px;
+  height: 64px;
+}
+.el-dialog__title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 2;
+  color: var(--main-title-color);
+}
+.el-dialog__header {
+  padding-top: 48px;
+}
+.el-dialog__close {
+  font-size: 32px;
+}

@@ -3,6 +3,7 @@ import Header from "@/components/Header.vue";
 import { useReplyStore } from "@/stores/reply";
 import { toRefs } from "vue";
 import { useAuthStore } from "@/stores/auth";
+
 const { isOnline, token } = toRefs(useAuthStore());
 
 const {
@@ -114,12 +115,7 @@ useReplyStore().init(token.value);
         />
     </div>
 </template>
-<style>
-th.el-table__cell.table-header {
-    background-color: var(--main-bg-color);
-    box-shadow: inset 3px 3px 5px #f9f9f9, inset -3px -2px 1px #c9c9c9;
-}
-</style>
+
 
 <style scoped>
 span {
@@ -133,38 +129,8 @@ span {
     text-align: center;
 }
 
-:deep(.el-input__wrapper) {
-    box-shadow: inset 1px 1px 2px #d1d9e6, inset -1px -1px 2px #f9f9f9;
-}
-:deep(table.el-table__body) {
-    border-collapse: collapse;
-}
-:deep(.el-table) {
-    box-shadow: var(--main-box-shadow-lg);
-}
-:deep(.el-table tr) {
-    background-color: var(--main-bg-color);
-    border-top: 0.125rem solid #e7e7e7;
-    border-bottom: 0.125rem solid #fdfdfd;
-    height: 50px;
-}
-:deep(.el-table th.el-table__cell) {
-    background: transparent;
-}
-
 :deep(.el-input__inner) {
     height: 30px;
     padding-left: 10px;
-}
-:deep(.el-input__wrapper.is-focus) {
-    box-shadow: 0 0 0 1px var(--el-input-hover-border-color) inset;
-}
-:deep(.el-table__body tr:hover > td.el-table__cell) {
-    border-top: 0.125rem solid #e3e3e3;
-    border-bottom: 0.125rem solid #fdfdfd;
-}
-
-:deep(.el-table__empty-block) {
-    background: var(--main-bg-color);
 }
 </style>

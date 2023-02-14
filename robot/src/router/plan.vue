@@ -43,88 +43,103 @@ const is_hide_on_single_page = true;
 useReplyStore().init(token.value);
 </script>
 <template #default="scope">
-    <Header />
-    <div class="markdown-wrapper">
-        <div class="markdown-title">
-            <input
-                required
-                autofocus
-                type="text"
-                name="title"
-                id="title"
-                class="form-control"
-            />
+    <div id="plan-page">
+        <Header />
+        <div class="markdown-wrapper">
+            <div class="markdown-title">
+                <input
+                    required
+                    autofocus
+                    type="text"
+                    name="title"
+                    id="title"
+                    class="form-control"
+                />
+            </div>
+            <el-tabs
+                v-show="isFocus"
+                v-model="activeName"
+                class="tabs"
+                @tab-click="handleClick"
+            >
+                <el-tab-pane label="Write" name="first" class="tabnav-tabs">
+                    <div class="markdown-content">
+                        <textarea
+                            v-model="markdown"
+                            class="form-control"
+                        ></textarea>
+                    </div>
+                </el-tab-pane>
+
+                <el-tab-pane label="Preview" name="second" class="tabnav-tabs"
+                    ><div v-html="markdownToHtml()"></div
+                ></el-tab-pane>
+            </el-tabs>
         </div>
-        <el-tabs
-            v-show="isFocus"
-            v-model="activeName"
-            class="tabs"
-            @tab-click="handleClick"
-        >
-            <el-tab-pane label="Write" name="first" class="tabnav-tabs">
-                <div class="markdown-content">
-                    <textarea
-                        v-model="markdown"
-                        class="form-control"
-                    ></textarea>
-                </div>
-            </el-tab-pane>
 
-            <el-tab-pane label="Preview" name="second" class="tabnav-tabs"
-                ><div v-html="markdownToHtml()"></div
-            ></el-tab-pane>
-        </el-tabs>
-    </div>
-
-    <div v-if="isOnline">
-        <el-table
-            :data="filterTableData"
-            style="width: 100%"
-            @row-click="row_click"
-        >
-            <el-table-column width="60">
-                <el-button :icon="Check" circle></el-button>
-            </el-table-column>
-            <el-table-column #default="scope">
-                <div class="task_list_item_content">
-                    <div
-                        class="task_list_item_content_wrapper"
-                        style="display: flex; flex-direction: column"
-                    >
-                        <div class="task_title">{{ scope.row.keyword }}</div>
-                        <div class="task_content">{{ scope.row.username }}</div>
-                        <div class="task_create_date">
-                            {{ scope.row.username }}
+        <div v-if="isOnline">
+            <el-table
+                :data="filterTableData"
+                style="width: 100%"
+                @row-click="row_click"
+            >
+                <el-table-column width="60">
+                    <el-button :icon="Check" circle></el-button>
+                </el-table-column>
+                <el-table-column #default="scope">
+                    <div class="task_list_item_content">
+                        <div
+                            class="task_list_item_content_wrapper"
+                            style="display: flex; flex-direction: column"
+                        >
+                            <div class="task_title">
+                                {{ scope.row.keyword }}
+                            </div>
+                            <div class="task_content">
+                                {{ scope.row.username }}
+                            </div>
+                            <div class="task_create_date">
+                                {{ scope.row.username }}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </el-table-column>
+                </el-table-column>
 
-            <el-table-column prop="id" align="right" />
-        </el-table>
-        <el-button
-            type="primary"
-            @click="handleTableAdd()"
-            style="margin-top: 1rem"
-            >Add</el-button
-        >
+                <el-table-column prop="id" align="right" />
+            </el-table>
+            <el-button
+                type="primary"
+                @click="handleTableAdd()"
+                style="margin-top: 1rem"
+                >Add</el-button
+            >
+        </div>
+
+        <div v-else>请先登录喵</div>
+        <el-divider v-show="!is_hide_on_single_page" />
+        <el-pagination
+            background
+            :hide-on-single-page="is_hide_on_single_page"
+            :page-size="page_size"
+            :total="total"
+            v-model:current-page="current_page"
+            layout="prev, pager, next"
+        />
     </div>
-
-    <div v-else>请先登录喵</div>
-    <el-divider v-show="!is_hide_on_single_page" />
-    <el-pagination
-        background
-        :hide-on-single-page="is_hide_on_single_page"
-        :page-size="page_size"
-        :total="total"
-        v-model:current-page="current_page"
-        layout="prev, pager, next"
-    />
 </template>
 
 <style scoped>
+:deep(.el-table__header-wrapper) {
+    display: none;
+}
 * {
     box-sizing: border-box;
+}
+#plan-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
 }
 .markdown-wrapper {
     --color-canvas-default: #ffffff;
@@ -225,4 +240,6 @@ h2 {
 #pane-second h1 {
     text-align: left;
 }
+
+/*  */
 </style>

@@ -1,34 +1,6 @@
-.el-dialog__headerbtn:focus-visible {
-  outline: none;
-  width: 64px;
-  height: 64px;
-}
-.el-dialog__title {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 2;
-  color: var(--main-title-color);
-}
-.el-dialog__header {
-  padding-top: 48px;
-}
-.el-dialog__close {
-  font-size: 32px;
-}
-
 .el-card {
   background-color: var(--main-bg-color);
   border: none;
-}
-
-.el-input__wrapper {
-  letter-spacing: 0.15px;
-  border: none;
-  outline: none;
-  font-family: "Montserrat", sans-serif;
-  background-color: var(--main-bg-color);
-  transition: 0.25s ease;
-  border-radius: 8px;
 }
 
 .el-divider--horizontal {
