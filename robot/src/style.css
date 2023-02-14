@@ -21,13 +21,15 @@ html {
   --btn-bg-color: #4b70e2;
   --btn-box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
 
-  --main-box-shadow-lg: 10px 10px 10px #d1d9e6, -10px -10px 10px #f9f9f9;
+  --main-box-shadow-lg: 10px 10px 14px #d1d9e6, -10px -10px 14px #f9f9f9;
   --main-box-shadow-md: 8px 8px 12px #d1d9e6, -8px -8px 12px #f9f9f9;
   --main-box-shadow-md-in: inset 8px 8px 12px #d1d9e6, inset -8px -8px 12px #f9f9f9;
   --main-box-shadow-sm: 4px 4px 10px #d1d9e6, -4px -4px 10px #f9f9f9;
   --main-box-shadow-sm-in: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #f9f9f9;
   --main-box-shadow-xs: 2px 2px 4px #d1d9e6, -2px -2px 4px #f9f9f9;
   --main-box-shadow-xs-in: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9;
+  --main-box-shadow-tiny: 1px 1px 2px #d1d9e6, -1px -1px 2px #f9f9f9;
+  --main-box-shadow-tiny-in: inset 1px 1px 2px #d1d9e6, inset -1px -1px 2px #f9f9f9;
 }
 
 html {

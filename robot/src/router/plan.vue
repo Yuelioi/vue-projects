@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 import { useReplyStore } from "@/stores/reply";
 import { toRefs, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import { Check } from "@element-plus/icons-vue";
+import { Check, Remove } from "@element-plus/icons-vue";
 import { marked } from "marked";
 
 import type { TabsPaneContext } from "element-plus";
@@ -22,8 +22,16 @@ const {
     handleTableSave,
 } = toRefs(useReplyStore());
 
+function handle_hover(row: any) {
+    console.log(row);
+    row.isFocus = true;
+}
+function handle_leave_hover(row: any) {
+    row.isFocus = false;
+}
+
 function row_click(row: any, column: any, event: any) {
-    console.log(row, column);
+    // console.log(row, column);
 }
 let markdown = ref("# 111\n## 22 \n### 3");
 let isFocus = ref(true);
@@ -42,7 +50,7 @@ function markdownToHtml() {
 const is_hide_on_single_page = true;
 useReplyStore().init(token.value);
 </script>
-<template #default="scope">
+<template>
     <div id="plan-page">
         <Header />
         <div class="markdown-wrapper">
@@ -82,9 +90,11 @@ useReplyStore().init(token.value);
                 :data="filterTableData"
                 style="width: 100%"
                 @row-click="row_click"
+                @cell-mouse-enter="handle_hover"
+                @cell-mouse-leave="handle_leave_hover"
             >
-                <el-table-column width="60">
-                    <el-button :icon="Check" circle></el-button>
+                <el-table-column #default="scope" width="60">
+                    <el-button :icon="Check" circle size="mini"></el-button>
                 </el-table-column>
                 <el-table-column #default="scope">
                     <div class="task_list_item_content">
@@ -199,6 +209,21 @@ useReplyStore().init(token.value);
     border-color: var(--color-accent-fg);
     outline: none;
     box-shadow: inset 0 0 0 1px var(--color-accent-fg);
+}
+
+.el-button {
+    box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #ffffff;
+    background: var(--main-bg-color);
+    color: var(--main-text-color);
+    border: none;
+}
+.el-button:focus,
+.el-button:hover {
+    color: unset;
+    border-color: var(--main-bg-color);
+    background-color: unset;
+    box-shadow: var(--main-box-shadow-xs-in);
+    color: #686868;
 }
 
 .el-tabs__item {

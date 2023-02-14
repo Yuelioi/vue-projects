@@ -21,14 +21,15 @@ export const usePlanStore = defineStore("storeId", {
             token: "",
             tableData: [
                 {
-                    username: "",
-                    type: "",
-                    create_date: "",
-                    finish_date: "",
-                    status: "",
-                    tag: "",
+                    username: "A",
+                    type: "B",
+                    create_date: "1",
+                    finish_date: "2",
+                    status: "3",
+                    tag: "4",
                     id: 1,
                     isEditting: false,
+                    isFocus: false,
                     isModified: false,
                 },
             ],
@@ -115,6 +116,7 @@ export const usePlanStore = defineStore("storeId", {
                 id: 1,
                 isEditting: false,
                 isModified: false,
+                isFocus: false,
             });
             this.tableData[this.total - 1].isEditting = true;
         },
