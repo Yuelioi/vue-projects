@@ -80,17 +80,18 @@ export const usePlanStore = defineStore("storeId", {
                 that.token = localStorage.getItem("bot_jwt_token") || "";
                 axios({
                     method: "get",
-                    url: "https://bot.yuelili.com/api/reply/list",
+                    url: "https://bot.yuelili.com/api/plan/list",
                     params: {
                         token: that.token,
                     },
                 }).then(function (response) {
                     const sqldata = response.data["sqldata"];
                     let res = <any>[];
+                    console.log(sqldata)
                     if (sqldata) {
                         res = that.responseToData(sqldata);
                     }
-
+                    console.log(res)
                     if (res.length > 0) {
                         that.username = res[0].username;
                         that.tableData = res;
@@ -125,9 +126,9 @@ export const usePlanStore = defineStore("storeId", {
             if (row.id !== 0) {
                 axios({
                     method: "get",
-                    url: "https://bot.yuelili.com/api/reply/delete",
+                    url: "https://bot.yuelili.com/api/plan/delete",
                     params: {
-                        reply_id: row.id,
+                        plan_id: row.id,
                         token: this.token,
                     },
                 }).then(function (response) {
@@ -153,7 +154,7 @@ export const usePlanStore = defineStore("storeId", {
             if (row.id == 0) {
                 axios({
                     method: "get",
-                    url: "https://bot.yuelili.com/api/reply/add",
+                    url: "https://bot.yuelili.com/api/plan/add",
                     params: {
                         token: this.token,
                     },
@@ -161,7 +162,7 @@ export const usePlanStore = defineStore("storeId", {
             } else {
                 axios({
                     method: "get",
-                    url: "https://bot.yuelili.com/api/reply/update",
+                    url: "https://bot.yuelili.com/api/plan/update",
                     params: {
                         token: this.token,
                     },
@@ -185,7 +186,7 @@ export const usePlanStore = defineStore("storeId", {
             const that = this;
             axios({
                 method: "get",
-                url: "https://bot.yuelili.com/api/reply/list",
+                url: "https://bot.yuelili.com/api/plan/list",
                 params: {
                     token: this.token,
                 },

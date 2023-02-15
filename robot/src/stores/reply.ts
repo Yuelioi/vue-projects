@@ -60,11 +60,11 @@ export const useReplyStore = defineStore("storeId", {
             for (let i = 0; i < sqldata.length; i++) {
                 let ele = sqldata[i];
                 res.push({
-                    username: ele[1],
-                    keyword: ele[2],
-                    reply: ele[3],
-                    groups: ele[4],
-                    id: ele[0],
+                    username: ele["username"],
+                    keyword: ele["keyword"],
+                    reply: ele["reply"],
+                    groups: ele["groups"],
+                    id: ele["ID"],
                     isEditting: false,
                     isModified: false,
                 });
@@ -87,6 +87,7 @@ export const useReplyStore = defineStore("storeId", {
                 }).then(function (response) {
                     const sqldata = response.data["sqldata"];
                     let res = <any>[];
+
                     if (sqldata) {
                         res = that.responseToData(sqldata);
                     }

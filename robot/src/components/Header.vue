@@ -1,52 +1,11 @@
 <script lang="ts" setup>
-import { useReplyStore } from "@/stores/reply";
 import { useAuthStore } from "@/stores/auth";
-import { storeToRefs } from "pinia";
 import { toRefs } from "vue";
+import { useRouter } from "vue-router";
 
-const { tableData } = storeToRefs(useReplyStore());
-const { isOnline, avatar, token } = toRefs(useAuthStore());
-const { refreshData } = toRefs(useReplyStore());
+const { isOnline, avatar } = toRefs(useAuthStore());
 
 useAuthStore().init();
-
-function uploadCSV() {
-    let upload_btn: HTMLElement = document.querySelector(
-        "#file"
-    ) as HTMLElement;
-    upload_btn.addEventListener("change", (e: any) => {
-        let file = e.target.files[0];
-        var reader = new FileReader();
-
-        reader.onload = function () {
-            var csvData = reader.result;
-            console.log(csvData);
-        };
-
-        reader.readAsText(file);
-    });
-    upload_btn.click();
-}
-
-function downloadCSV(filename: string) {
-    let csv = "\uFEFF"; //解决乱码问题
-    csv += "keyword,replay\n"; //添加表格的头
-    for (let index = 0; index < tableData.value.length; index++) {
-        const element = tableData.value[index];
-        csv += `${element.keyword},${element.reply}\n`;
-    }
-
-    var csvFile, downloadLink;
-
-    csvFile = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    downloadLink = document.createElement("a");
-    downloadLink.download = filename;
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-    downloadLink.style.display = "none";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    downloadLink.remove();
-}
 
 const goBack = () => {
     window.location.href = "";
@@ -54,24 +13,41 @@ const goBack = () => {
 </script>
 
 <template>
-    <el-page-header :icon="null" title="返回主页" @back="goBack">
-        <template #content>
-            <div class="flex items-center">
-                <el-avatar :size="32" class="mr-3" :src="avatar" />
+    <el-header>
+        <el-page-header :icon="null" title="返回主页" @back="goBack">
+            <template #breadcrumb>
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item :to="{ path: './' }">
+                        主页
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>{{
+                        useRouter().currentRoute.value.meta.parent
+                    }}</el-breadcrumb-item>
+                    <el-breadcrumb-item>{{
+                        useRouter().currentRoute.value.meta.breadcrumb
+                    }}</el-breadcrumb-item>
+                </el-breadcrumb>
+            </template>
+            <template #content>
+                <span class="text-large font-600 mr-3" style="font-size: 14px">
+                    {{ useRouter().currentRoute.value.meta.name }}
+                </span>
+            </template>
+            <template #extra>
+                <div class="flex items-center">
+                    <el-avatar :size="32" class="mr-3" :src="avatar" />
 
-                <el-tag style="margin-left: 0.75rem" v-show="isOnline"
-                    >Admin</el-tag
-                >
-                <el-tag style="margin-left: 0.75rem" v-show="!isOnline"
-                    >游客</el-tag
-                >
-            </div>
-        </template>
-        <template #extra>
-            <div class="flex items-center"></div>
-        </template>
-    </el-page-header>
-    <el-divider />
+                    <el-tag style="margin-left: 0.75rem" v-show="isOnline"
+                        >Admin</el-tag
+                    >
+                    <el-tag style="margin-left: 0.75rem" v-show="!isOnline"
+                        >游客</el-tag
+                    >
+                </div>
+            </template>
+        </el-page-header>
+        <el-divider
+    /></el-header>
 </template>
 
 <style lang="css">

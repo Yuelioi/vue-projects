@@ -8,9 +8,9 @@ import Plan from "@/router/plan.vue";
 // 2. 定义一些路由
 
 const routes = [
-    { path: "/", component: Login, name: "统登录页面 | Bot管理系统" },
-    { path: "/reply", component: Reply, name: "应答管理 | Bot管理系统" },
-    { path: "/plan", component: Plan, name: "计划管理 | Bot管理系统" },
+    { path: "/", component: Login, name: "统登录页面 | Bot管理系统", meta: {} },
+    { path: "/reply", component: Reply, name: "应答管理 | Bot管理系统", meta: { parent: "系统管理", breadcrumb: "应答", name: "我的应答" } },
+    { path: "/plan", component: Plan, name: "计划管理 | Bot管理系统", meta: { parent: "系统管理", breadcrumb: "计划", name: "我的计划" } },
 ];
 
 // 3. 创建路由实例并传递 `routes` 配置

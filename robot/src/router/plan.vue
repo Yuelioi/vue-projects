@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Header from "@/components/Header.vue";
-import { useReplyStore } from "@/stores/reply";
+import { usePlanStore } from "@/stores/plan";
 import { toRefs, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { Check, Remove } from "@element-plus/icons-vue";
@@ -20,7 +20,7 @@ const {
     handleTableEdit,
     handleTableDelete,
     handleTableSave,
-} = toRefs(useReplyStore());
+} = toRefs(usePlanStore());
 
 function handle_hover(row: any) {
     console.log(row);
@@ -48,7 +48,7 @@ function markdownToHtml() {
 }
 
 const is_hide_on_single_page = true;
-useReplyStore().init(token.value);
+usePlanStore().init(token.value);
 </script>
 <template>
     <div id="plan-page">
