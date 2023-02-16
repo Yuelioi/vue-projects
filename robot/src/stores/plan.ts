@@ -3,6 +3,9 @@ import axios from "axios";
 import { Plan } from "@/stores/interface";
 import { onMounted } from "vue";
 import { ElMessage } from "element-plus";
+import { marked } from "marked";
+
+
 //引入Elmessage和Elloading的css样式文件
 import "element-plus/theme-chalk/el-loading.css";
 import "element-plus/theme-chalk/el-message.css";
@@ -19,6 +22,7 @@ export const usePlanStore = defineStore("storeId", {
             total: 1,
             page_size: 20,
             token: "",
+            current_task_content: "",
             tableData: [
                 {
                     username: "A",
@@ -56,6 +60,7 @@ export const usePlanStore = defineStore("storeId", {
 
             return data;
         },
+
     },
     actions: {
         responseToData(sqldata: any) {
@@ -63,16 +68,24 @@ export const usePlanStore = defineStore("storeId", {
             for (let i = 0; i < sqldata.length; i++) {
                 let ele = sqldata[i];
                 res.push({
-                    username: ele[1],
-
-                    id: ele[0],
+                    username: ele["username"],
+                    title: ele["title"],
+                    content: ele["content"],
+                    create_date: ele["create_date"],
+                    finish_date: ele["finish_date"],
+                    period: ele["period"],
+                    priority: ele["priority"],
+                    status: ele["status"],
+                    tag: ele["tag"],
+                    category: ele["category"],
+                    id: ele["ID"],
                     isEditting: false,
                     isModified: false,
                 });
             }
             return res;
         },
-
+        getHtml(content: any) { return marked.parse(content) },
         init(token: string) {
             let that = this;
 

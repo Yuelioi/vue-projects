@@ -28,7 +28,7 @@ useReplyStore().init(token.value);
         <el-container class="common-layout">
             <Header />
             <el-container class="content">
-                <Aside /><el-container>
+                <el-container>
                     <el-main
                         ><div v-if="isOnline">
                             <el-table

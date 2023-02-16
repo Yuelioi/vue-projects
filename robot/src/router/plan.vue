@@ -3,138 +3,153 @@ import Header from "@/components/Header.vue";
 import { usePlanStore } from "@/stores/plan";
 import { toRefs, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import { Check, Remove } from "@element-plus/icons-vue";
-import { marked } from "marked";
+import { Check } from "@element-plus/icons-vue";
 
 import type { TabsPaneContext } from "element-plus";
+import { marked } from "marked";
+
+console.log(marked.parse("# 11"));
 
 const { isOnline, token } = toRefs(useAuthStore());
-
+const activeName = ref("write-mode");
 const {
-    search,
     current_page,
     total,
     page_size,
     filterTableData,
     handleTableAdd,
-    handleTableEdit,
-    handleTableDelete,
-    handleTableSave,
+    current_task_content,
 } = toRefs(usePlanStore());
 
-function handle_hover(row: any) {
-    console.log(row);
-    row.isFocus = true;
-}
-function handle_leave_hover(row: any) {
-    row.isFocus = false;
+function submit_plan(row: any) {
+    row.isEditting = false;
 }
 
 function row_click(row: any, column: any, event: any) {
-    // console.log(row, column);
+    row.isEditting = true;
 }
-let markdown = ref("# 111\n## 22 \n### 3");
-let isFocus = ref(true);
-// isFocus.value = false;
-
-const activeName = ref("first");
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-    console.log(tab, event);
+    console.log(tab, event.target);
 };
-
-function markdownToHtml() {
-    return marked(markdown.value);
-}
 
 const is_hide_on_single_page = true;
 usePlanStore().init(token.value);
 </script>
 <template>
     <div id="plan-page">
-        <Header />
-        <div class="markdown-wrapper">
-            <div class="markdown-title">
-                <input
-                    required
-                    autofocus
-                    type="text"
-                    name="title"
-                    id="title"
-                    class="form-control"
-                />
-            </div>
-            <el-tabs
-                v-show="isFocus"
-                v-model="activeName"
-                class="tabs"
-                @tab-click="handleClick"
-            >
-                <el-tab-pane label="Write" name="first" class="tabnav-tabs">
-                    <div class="markdown-content">
-                        <textarea
-                            v-model="markdown"
-                            class="form-control"
-                        ></textarea>
-                    </div>
-                </el-tab-pane>
+        <el-container class="common-layout">
+            <Header />
+            <el-container class="main">
+                <el-container class="side"><Aside /></el-container>
+                <el-container class="content">
+                    <el-main>
+                        <div v-if="isOnline">
+                            <el-table
+                                :data="filterTableData"
+                                style="width: 100%"
+                                @row-click="row_click"
+                            >
+                                <el-table-column width="60" #default="scope">
+                                    <el-button
+                                        :icon="Check"
+                                        circle
+                                        size="mini"
+                                        @click="submit_plan(scope.row)"
+                                    >
+                                    </el-button>
+                                </el-table-column>
+                                <el-table-column #default="scope">
+                                    <div
+                                        class="task_list_item_content"
+                                        v-show="!scope.row.isEditting"
+                                    >
+                                        <div
+                                            class="
+                                                task_list_item_content_wrapper
+                                            "
+                                        >
+                                            <div class="task_title">
+                                                {{ scope.row.title }}
+                                            </div>
+                                            <div class="task_content">
+                                                {{ scope.row.content }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        v-show="scope.row.isEditting"
+                                        class="markdown-wrapper"
+                                    >
+                                        <div class="markdown-title">
+                                            <input
+                                                required
+                                                autofocus
+                                                type="text"
+                                                name="title"
+                                                id="title"
+                                                :value="scope.row.title"
+                                                class="form-control"
+                                            />
+                                        </div>
+                                        <el-tabs
+                                            v-model="activeName"
+                                            :data="`${scope.row.content}`"
+                                            class="tabs"
+                                            @tab-click="handleClick"
+                                        >
+                                            <el-tab-pane
+                                                label="Write"
+                                                name="write-mode"
+                                                class="tabnav-tabs"
+                                            >
+                                                <div class="markdown-content">
+                                                    <textarea
+                                                        v-model="
+                                                            scope.row.content
+                                                        "
+                                                        class="form-control"
+                                                    ></textarea>
+                                                </div>
+                                            </el-tab-pane>
 
-                <el-tab-pane label="Preview" name="second" class="tabnav-tabs"
-                    ><div v-html="markdownToHtml()"></div
-                ></el-tab-pane>
-            </el-tabs>
-        </div>
+                                            <el-tab-pane
+                                                label="Preview"
+                                                name="preview-mode"
+                                                class="tabnav-tabs"
+                                                ><div>
+                                                    {{ current_task_content }}
+                                                </div>
+                                            </el-tab-pane>
+                                        </el-tabs>
+                                    </div>
+                                </el-table-column>
 
-        <div v-if="isOnline">
-            <el-table
-                :data="filterTableData"
-                style="width: 100%"
-                @row-click="row_click"
-                @cell-mouse-enter="handle_hover"
-                @cell-mouse-leave="handle_leave_hover"
-            >
-                <el-table-column #default="scope" width="60">
-                    <el-button :icon="Check" circle size="mini"></el-button>
-                </el-table-column>
-                <el-table-column #default="scope">
-                    <div class="task_list_item_content">
-                        <div
-                            class="task_list_item_content_wrapper"
-                            style="display: flex; flex-direction: column"
-                        >
-                            <div class="task_title">
-                                {{ scope.row.keyword }}
-                            </div>
-                            <div class="task_content">
-                                {{ scope.row.username }}
-                            </div>
-                            <div class="task_create_date">
-                                {{ scope.row.username }}
-                            </div>
+                                <el-table-column prop="id" align="right" />
+                            </el-table>
+                            <el-button
+                                type="primary"
+                                @click="handleTableAdd()"
+                                style="margin-top: 1rem"
+                                >Add</el-button
+                            >
                         </div>
-                    </div>
-                </el-table-column>
 
-                <el-table-column prop="id" align="right" />
-            </el-table>
-            <el-button
-                type="primary"
-                @click="handleTableAdd()"
-                style="margin-top: 1rem"
-                >Add</el-button
-            >
-        </div>
-
-        <div v-else>请先登录喵</div>
-        <el-divider v-show="!is_hide_on_single_page" />
-        <el-pagination
-            background
-            :hide-on-single-page="is_hide_on_single_page"
-            :page-size="page_size"
-            :total="total"
-            v-model:current-page="current_page"
-            layout="prev, pager, next"
-        />
+                        <div v-else>请先登录喵</div>
+                        <el-divider v-show="!is_hide_on_single_page" />
+                        <el-pagination
+                            background
+                            :hide-on-single-page="is_hide_on_single_page"
+                            :page-size="page_size"
+                            :total="total"
+                            v-model:current-page="current_page"
+                            layout="prev, pager, next"
+                        />
+                    </el-main>
+                </el-container>
+            </el-container>
+            <Footer />
+        </el-container>
     </div>
 </template>
 
@@ -142,9 +157,31 @@ usePlanStore().init(token.value);
 :deep(.el-table__header-wrapper) {
     display: none;
 }
-* {
-    box-sizing: border-box;
+
+.task_list_item_content_wrapper {
+    display: flex;
+    flex-direction: column;
 }
+:deep(.el-table) {
+    box-shadow: unset;
+}
+.common-layout {
+    flex-direction: column;
+}
+
+section.main {
+    margin-top: 50px;
+}
+section.main {
+    box-shadow: 8px 8px 12px #d1d9e6, -8px -8px 12px #f9f9f9;
+}
+:deep(.el-tabs__header) {
+    display: flex;
+}
+:deep(.el-tabs__new-tab) {
+    float: unset;
+}
+
 #plan-page {
     max-width: 1280px;
     margin: 0 auto;
