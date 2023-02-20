@@ -101,15 +101,6 @@ export const useLoginStore = defineStore("loginId", {
 
             this.btnloading = false;
         },
-        async parse_token(token: string) {
-            const response = await axios.get("https://bot.yuelili.com/api/parse_token", {
-                params: {
-                    token: token,
-                },
-            });
-            return response.data;
-        },
-
 
 
         async register(formEl: FormInstance | undefined) {

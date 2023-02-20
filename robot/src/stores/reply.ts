@@ -7,6 +7,8 @@ import { ElMessage } from "element-plus";
 import "element-plus/theme-chalk/el-loading.css";
 import "element-plus/theme-chalk/el-message.css";
 
+
+
 export const useReplyStore = defineStore("storeId", {
     // 推荐使用 完整类型推断的箭头函数
     state: () => {
@@ -55,51 +57,12 @@ export const useReplyStore = defineStore("storeId", {
         },
     },
     actions: {
-        responseToData(sqldata: any) {
-            let res = [];
-            for (let i = 0; i < sqldata.length; i++) {
-                let ele = sqldata[i];
-                res.push({
-                    username: ele["username"],
-                    keyword: ele["keyword"],
-                    reply: ele["reply"],
-                    groups: ele["groups"],
-                    id: ele["ID"],
-                    isEditting: false,
-                    isModified: false,
-                });
-            }
-            return res;
-        },
-
-        init(token: string) {
+        init() {
             let that = this;
-
             onMounted(() => {
                 that.token = localStorage.getItem("bot_jwt_token") || "";
+                that.refreshData()
 
-                axios({
-                    method: "get",
-                    url: "https://bot.yuelili.com/api/reply/list",
-                    params: {
-                        token: that.token,
-                    },
-                }).then(function (response) {
-                    const sqldata = response.data["sqldata"];
-                    let res = <any>[];
-
-                    if (sqldata) {
-                        res = that.responseToData(sqldata);
-                    }
-
-                    if (res.length > 0) {
-                        that.username = res[0].username;
-                        that.tableData = res;
-                        that.qqgroup = res[0].groups;
-                    }
-
-                    return res;
-                });
             });
         },
 
@@ -192,10 +155,25 @@ export const useReplyStore = defineStore("storeId", {
                 method: "get",
                 url: "https://bot.yuelili.com/api/reply/list",
                 params: {
-                    token: this.token,
+                    token: that.token,
                 },
             }).then(function (response) {
-                that.tableData = that.responseToData(response.data["sqldata"]);
+                if (response.data.status_code == 200 && response.data["sqldata"].length > 0) {
+                    const sqldata = response.data["sqldata"];
+                    let res = <any>[];
+
+                    res = sqldata.map((ele: any) => {
+                        return {
+                            ...ele,
+                            isEditting: false,
+                            isModified: false
+                        }
+                    });
+                    that.username = res[0].username;
+                    that.tableData = res;
+                    that.qqgroup = res[0].qq_groups;
+                    console.log(that.tableData)
+                }
             });
         },
         handleTableEdit(row: Reply) {

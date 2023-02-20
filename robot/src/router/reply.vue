@@ -21,7 +21,7 @@ const {
 } = toRefs(useReplyStore());
 
 const is_hide_on_single_page = true;
-useReplyStore().init(token.value);
+useReplyStore().init();
 </script>
 <template>
     <div id="reply-page">
