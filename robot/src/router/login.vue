@@ -15,8 +15,15 @@ const form = reactive({
 });
 
 let { btnloading, yiyan } = storeToRefs(useLoginStore());
-const { model, rules, login, reset_password, showAutoLoginDlg, AutoLogin } =
-    toRefs(useLoginStore());
+const {
+    user,
+    rules,
+    login,
+    register,
+    reset_password,
+    showAutoLoginDlg,
+    AutoLogin,
+} = toRefs(useLoginStore());
 
 useLoginStore().init();
 
@@ -56,14 +63,14 @@ const formRef = ref<FormInstance>();
                         <h2 class="title">登录</h2>
                         <el-form
                             class="login-form"
-                            :model="model"
+                            :model="user"
                             :rules="rules"
                             ref="formRef"
                         >
                             <el-form-item prop="username">
                                 <el-input
                                     prefix-icon="User"
-                                    v-model="model.username"
+                                    v-model="user.username"
                                     placeholder="用户名(QQ)"
                                 ></el-input>
                             </el-form-item>
@@ -71,7 +78,7 @@ const formRef = ref<FormInstance>();
                             <el-form-item prop="password">
                                 <el-input
                                     prefix-icon="Flag"
-                                    v-model="model.password"
+                                    v-model="user.password"
                                     placeholder="密码"
                                     type="password"
                                 ></el-input>
@@ -100,14 +107,14 @@ const formRef = ref<FormInstance>();
                         <h2 class="title">注册</h2>
                         <el-form
                             class="login-form"
-                            :model="model"
+                            :model="user"
                             :rules="rules"
                             ref="formRef"
                         >
                             <el-form-item prop="username">
                                 <el-input
                                     prefix-icon="User"
-                                    v-model="model.username"
+                                    v-model="user.username"
                                     placeholder="用户名(QQ)"
                                 ></el-input>
                             </el-form-item>
@@ -115,7 +122,7 @@ const formRef = ref<FormInstance>();
                             <el-form-item prop="password">
                                 <el-input
                                     prefix-icon="Flag"
-                                    v-model="model.password"
+                                    v-model="user.nickname"
                                     placeholder="昵称"
                                     type="password"
                                 ></el-input>
@@ -123,7 +130,7 @@ const formRef = ref<FormInstance>();
                             <el-form-item prop="password">
                                 <el-input
                                     prefix-icon="Flag"
-                                    v-model="model.password"
+                                    v-model="user.password"
                                     placeholder="密码"
                                     type="password"
                                 ></el-input>
@@ -134,7 +141,7 @@ const formRef = ref<FormInstance>();
                                     class="login-button"
                                     type="primary"
                                     native-type="submit"
-                                    block
+                                    @click="register(formRef)"
                                     >注册</el-button
                                 >
                             </el-form-item>

@@ -15,8 +15,9 @@ export const useLoginStore = defineStore("loginId", {
         return {
             btnloading: false,
             yiyan: "",
-            model: { username: "", password: "" },
+            user: { username: "", password: "", nickname: "" },
             showAutoLoginDlg: false,
+            token: "",
             rules: {
                 username: [
                     { required: true, message: "未填写用户名", trigger: "blur" },
@@ -42,33 +43,47 @@ export const useLoginStore = defineStore("loginId", {
     actions: {
         init() {
             let that = this;
-            let token = localStorage.getItem("bot_jwt_token");
+            that.token = localStorage.getItem("bot_jwt_token") || "";
             onMounted(() => {
                 axios({
                     method: "get",
                     url: "https://api.ixiaowai.cn/ylapi/index.php/",
 
                 }).then((response) => {
-
                     that.yiyan = response.data;
                 });
 
 
-                if (token) {
-                    axios({
-                        method: "get",
-                        url: "https://bot.yuelili.com/api/parse_token",
-                        params: {
-                            token: token,
-                        },
-                    }).then(() => {
-                        that.showAutoLoginDlg = true;
-                    });
+                if (that.token) {
+                    that.showAutoLoginDlg = true;
                 }
             });
         },
         AutoLogin() {
-            window.location.href += "reply";
+            axios.post("https://bot.yuelili.com/api/login", {
+                token: this.token,
+
+            }).then((response: any) => {
+                console.log(response.data)
+
+                if (response.data.status_code == 200) {
+                    ElMessage({
+                        showClose: true,
+                        message: response.data.message,
+                        type: "success",
+                    });
+                    window.location.href += "reply";
+                } else {
+                    this.showAutoLoginDlg = false;
+                    ElMessage({
+                        showClose: true,
+                        message: response.data.message,
+                        type: "error",
+                    });
+                }
+
+            });
+
         },
         async reset_password(username: string, password: string, new_password: string) {
             const response = await axios.get("https://bot.yuelili.com/api/change_password", {
@@ -94,14 +109,41 @@ export const useLoginStore = defineStore("loginId", {
             });
             return response.data;
         },
-        async verify_password(username: string, password: string) {
-            const response = await axios.get("https://bot.yuelili.com/api/auth", {
-                params: {
-                    username: username,
-                    password: password,
-                },
+
+
+
+        async register(formEl: FormInstance | undefined) {
+            if (!formEl) {
+                return;
+            }
+            let valid = await formEl.validate();
+            if (!valid) {
+                return;
+            }
+
+            const response = await axios.post("https://bot.yuelili.com/api/register", {
+                username: this.user.username,
+                password: this.user.password,
+                nickname: this.user.nickname,
             });
-            return response.data;
+
+
+            if (response.data.status_code == 200) {
+                ElMessage({
+                    showClose: true,
+                    message: response.data.message,
+                    type: "success",
+                });
+                localStorage.setItem("bot_jwt_token", response.data.token);
+            } else {
+                ElMessage({
+                    showClose: true,
+                    message: response.data.message,
+                    type: "error",
+                });
+            }
+
+
         },
         async login(formEl: FormInstance | undefined) {
             if (!formEl) {
@@ -111,25 +153,30 @@ export const useLoginStore = defineStore("loginId", {
             if (!valid) {
                 return;
             }
+
             await this.simulateLogin();
 
-            this.verify_password(this.model.username, this.model.password).then(data => {
-                if (data.status == 200) {
-                    ElMessage({
-                        showClose: true,
-                        message: "登录成功",
-                        type: "success",
-                    });
-                    localStorage.setItem("bot_jwt_token", data.token);
-                    window.location.href += "reply";
-                } else {
-                    ElMessage({
-                        showClose: true,
-                        message: "用户名或密码错误",
-                        type: "error",
-                    });
-                }
+            const response = await axios.post("https://bot.yuelili.com/api/login", {
+                username: this.user.username,
+                password: this.user.password,
             });
+
+            if (response.data.status_code == 200) {
+                ElMessage({
+                    showClose: true,
+                    message: response.data.message,
+                    type: "success",
+                });
+                localStorage.setItem("bot_jwt_token", response.data.token);
+                window.location.href += "reply";
+            } else {
+                ElMessage({
+                    showClose: true,
+                    message: response.data.message,
+                    type: "error",
+                });
+            }
+
         },
     },
 });
