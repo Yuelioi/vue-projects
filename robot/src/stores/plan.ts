@@ -108,7 +108,7 @@ export const usePlanStore = defineStore("storeId", {
                     if (res.length > 0) {
                         that.username = res[0].username;
                         that.tableData = res;
-                        that.qqgroup = res[0].groups;
+                        that.qqgroup = res[0].qq_groups;
                     }
 
                     return res;

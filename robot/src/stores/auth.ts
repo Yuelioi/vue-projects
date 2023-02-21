@@ -12,7 +12,8 @@ export const useAuthStore = defineStore("authId", {
     },
     getters: {
         avatar: state => {
-            return `https://q.qlogo.cn/g?b=qq&nk=${state.username}&s=640`;
+            https://q1.qlogo.cn/g?b=qq&nk=435826135&s=640
+            return `https://q1.qlogo.cn/g?b=qq&nk=${state.username}&s=640`;
         },
     },
     actions: {
@@ -29,7 +30,7 @@ export const useAuthStore = defineStore("authId", {
                         },
                     ).then(function (response) {
                         that.isOnline = true;
-                        that.username = response.data.data.username;
+                        that.username = response.data.username;
                         return;
                     });
                 }

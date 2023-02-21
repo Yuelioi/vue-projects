@@ -21,13 +21,14 @@ export const useReplyStore = defineStore("storeId", {
             total: 1,
             page_size: 20,
             token: "",
+            qq_groups: "",
             tableData: [
                 {
                     username: "",
                     keyword: "",
                     reply: "",
-                    groups: ["123"],
-                    id: 1,
+                    qq_groups: "123",
+                    ID: 0,
                     isEditting: false,
                     isModified: false,
                 },
@@ -74,36 +75,41 @@ export const useReplyStore = defineStore("storeId", {
                 username: this.username,
                 keyword: "",
                 reply: "",
-                groups: this.qqgroup,
-                id: 0,
+                qq_groups: this.qq_groups,
+                ID: 0,
                 isEditting: true,
                 isModified: true,
             });
             this.tableData[this.total - 1].isEditting = true;
+
         },
         handleTableDelete(index: any, row: Reply) {
             const that = this;
-            if (row.id !== 0) {
+            console.log(row.ID);
+
+            if (row.ID !== 0) {
                 axios({
-                    method: "get",
+                    method: "delete",
                     url: "https://bot.yuelili.com/api/reply/delete",
                     params: {
-                        reply_id: row.id,
+                        reply_id: row.ID,
                         token: this.token,
                     },
                 }).then(function (response) {
-                    that.refreshData();
-                    ElMessage({
-                        showClose: true,
-                        message: "删除成功",
-                        type: "success",
-                    });
-                });
-            } else {
-                ElMessage({
-                    showClose: true,
-                    message: "删除成功",
-                    type: "warning",
+                    if (response.data.status_code == 200) {
+                        that.refreshData();
+                        ElMessage({
+                            showClose: true,
+                            message: "删除成功",
+                            type: "success",
+                        });
+                    } else {
+                        ElMessage({
+                            showClose: true,
+                            message: "删除失败",
+                            type: "warning",
+                        });
+                    }
                 });
             }
 
@@ -111,43 +117,45 @@ export const useReplyStore = defineStore("storeId", {
         },
         handleTableSave(row: Reply) {
             let needRefresh = true;
-            if (row.id == 0) {
-                axios({
-                    method: "get",
-                    url: "https://bot.yuelili.com/api/reply/add",
-                    params: {
-                        token: this.token,
-                        key: row.keyword,
-                        reply: row.reply,
-                        groups: row.groups || "",
-                    },
-                }).then(function (response) { });
-            } else {
-                axios({
-                    method: "get",
-                    url: "https://bot.yuelili.com/api/reply/update",
-                    params: {
-                        token: this.token,
-                        key: row.keyword,
-                        reply: row.reply,
-                        groups: row.groups || "",
-                        reply_id: row.id,
-                    },
-                }).then(function (response) {
-                    console.log(response.status);
-                });
-            }
+            const that = this;
+            console.log(row.ID)
 
-            if (needRefresh) {
-                this.refreshData();
-                ElMessage({
-                    showClose: true,
-                    message: "更新成功",
-                    type: "success",
-                });
-            }
+            axios({
+                method: "post",
+                url: "https://bot.yuelili.com/api/reply/update",
+                params: {
+                    token: this.token,
+                    reply_id: row.ID,
+                    username: this.username,
+                    key: row.keyword,
+                    reply: row.reply,
+                    qq_groups: row.qq_groups || "",
+                },
+            }).then(function (response) {
+                if (response.data.status_code == 200) {
+                    if (needRefresh) {
+                        that.refreshData();
+                        ElMessage({
+                            showClose: true,
+                            message: "更新成功",
+                            type: "success",
+                        });
+                        row.isEditting = false;
+                    } else {
+                        ElMessage({
+                            showClose: true,
+                            message: "删除成功",
+                            type: "warning",
+                        });
+                    }
 
-            row.isEditting = false;
+                } else {
+
+                }
+
+            });
+
+
         },
         refreshData() {
             const that = this;
@@ -161,7 +169,7 @@ export const useReplyStore = defineStore("storeId", {
                 if (response.data.status_code == 200 && response.data["sqldata"].length > 0) {
                     const sqldata = response.data["sqldata"];
                     let res = <any>[];
-
+                    console.log(sqldata)
                     res = sqldata.map((ele: any) => {
                         return {
                             ...ele,
@@ -171,8 +179,7 @@ export const useReplyStore = defineStore("storeId", {
                     });
                     that.username = res[0].username;
                     that.tableData = res;
-                    that.qqgroup = res[0].qq_groups;
-                    console.log(that.tableData)
+                    that.qqgroup = res[0].qq_qq_groups;
                 }
             });
         },

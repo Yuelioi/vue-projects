@@ -23,7 +23,7 @@ const {
 const is_hide_on_single_page = true;
 useReplyStore().init();
 </script>
-<template>
+<template >
     <div id="reply-page">
         <el-container class="common-layout">
             <Header />
@@ -38,6 +38,12 @@ useReplyStore().init();
                                     background: 'var(--main-bg-color)',
                                 }"
                             >
+                                <el-table-column
+                                    label="ID"
+                                    prop="ID"
+                                    width="75px"
+                                >
+                                </el-table-column>
                                 <el-table-column
                                     label="用户名"
                                     prop="username"
@@ -55,6 +61,7 @@ useReplyStore().init();
                                         ></el-input>
                                     </template>
                                 </el-table-column>
+
                                 <el-table-column label="回复" prop="reply">
                                     <template #default="scope">
                                         <span v-show="!scope.row.isEditting">{{
@@ -68,8 +75,10 @@ useReplyStore().init();
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column label="群号" prop="groups" />
-                                <!-- <el-table-column label="ID" prop="id" /> -->
+                                <el-table-column
+                                    label="群号"
+                                    prop="qq_groups"
+                                />
 
                                 <el-table-column align="right">
                                     <template #header>
