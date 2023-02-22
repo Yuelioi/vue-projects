@@ -55,8 +55,8 @@ function switch_card() {
 const formRef = ref<FormInstance>();
 </script>
 <template #default="scope">
-    <el-row :gutter="10">
-        <div id="login-page">
+    <div id="login-page">
+        <el-row :gutter="10">
             <div class="login">
                 <div class="card1 card">
                     <el-card style="border-radius: 10px" shadow="never">
@@ -239,6 +239,7 @@ const formRef = ref<FormInstance>();
                                         form.newpassword
                                     )
                                 "
+                                style="di"
                             >
                                 提交
                             </el-button>
@@ -246,63 +247,216 @@ const formRef = ref<FormInstance>();
                     </template>
                 </el-dialog>
             </div>
-        </div>
-    </el-row>
+        </el-row>
+    </div>
 </template>
 
-<style lang="css">
-@import "@style/login.css";
-</style>
 
 
-<style scoped>
-.el-button:hover {
-    background-color: #7d97e7;
-}
-
-:deep(.el-dialog__footer) {
-    padding-bottom: 25px;
-}
-
-.el-dialog__footer .el-button {
-    width: 72px;
-    height: 32px;
-    margin-top: 5px;
-}
-.dialog-footer {
-    display: flex;
-    justify-content: space-evenly;
-    padding-bottom: 15px;
-}
-.el-form {
+<style scoped lang="less">
+#login-page {
+    overflow: hidden;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-}
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+    .login {
+        position: relative;
 
-.login :deep(.el-input__wrapper) {
-    width: 350px;
-    height: 40px;
-    margin: 4px 0;
-    padding-left: 25px;
-    font-size: 16px;
-}
+        min-width: min(1000px, 90vw);
+        min-height: min(600px, 90vh);
 
-.el-button {
-    width: 180px;
-    height: 50px;
-    border-radius: 25px;
-    margin-top: 50px;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 1.15px;
-    background-color: var(--btn-bg-color);
-    color: #f9f9f9;
-    box-shadow: var(--btn-box-shadow);
-    border: none;
-    outline: none;
+        padding: 25px;
+        background-color: var(--main-bg-color);
+        box-shadow: var(--main-box-shadow-lg);
+        border-radius: 12px;
+        overflow: hidden;
+
+        .switch {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            min-width: min(400px, 40vw);
+            padding: 50px;
+            z-index: 200;
+            transition: 1.25s;
+            background-color: var(--main-bg-color);
+            overflow: hidden;
+            box-shadow: var(--main-box-shadow-sm);
+        }
+
+        .title {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 3;
+            color: var(--main-title-color);
+        }
+
+        .switch__circle {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background-color: var(--main-bg-color);
+            box-shadow: var(--main-box-shadow-md-in);
+            bottom: -60%;
+            left: -60%;
+            transition: 1.25s;
+        }
+
+        .switch__container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: absolute;
+            width: 400px;
+            padding: 50px 55px;
+            transition: 1.25s;
+        }
+
+        .card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            width: min(600px, 60vw);
+            height: 100%;
+            padding: 25px;
+            background-color: var(--main-bg-color);
+            transition: 1.25s;
+        }
+
+        .card1 {
+            z-index: 100;
+            left: min(400px, 40vw);
+        }
+
+        .card2 {
+            z-index: 0;
+            left: min(400px, 40vw);
+        }
+
+        .description {
+            font-size: 14px;
+            letter-spacing: 0.25px;
+            line-height: 1.6;
+            text-align: left;
+            text-indent: 2em;
+        }
+
+        .forgot-password {
+            color: var(--main-title-color);
+            font-size: 15px;
+            margin-top: 25px;
+            border-bottom: var(--main-border);
+            line-height: 2;
+        }
+
+        .switch__circle--t {
+            top: -30%;
+            left: 60%;
+            width: 300px;
+            height: 300px;
+        }
+
+        .is-txr {
+            left: min(600px, 60vw);
+            transition: 1.25s;
+            transform-origin: left;
+        }
+
+        .is-txl {
+            left: 0;
+            transition: 1.25s;
+            transform-origin: right;
+        }
+
+        .is-hidden {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            transition: 1.25s;
+        }
+
+        .is-z200 {
+            z-index: 200;
+            transition: 1.25s;
+        }
+
+        .is-hidden {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            transition: 1.25s;
+        }
+    }
+    .el-button:hover {
+        background-color: #7d97e7;
+    }
+
+    .el-dialog__footer {
+        padding-bottom: 25px;
+    }
+
+    .el-dialog {
+        background-color: var(--main-bg-color);
+        box-shadow: var(--main-box-shadow-xs);
+        border-radius: 15px !important;
+    }
+
+    .el-dialog__footer .el-button {
+        width: 72px;
+        height: 32px;
+        margin-top: 5px;
+    }
+    .dialog-footer {
+        display: flex;
+        justify-content: space-evenly;
+        padding-bottom: 15px;
+    }
+    .el-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    }
+
+    :deep(.el-input__wrapper) {
+        width: 350px;
+        height: 40px;
+        margin: 4px 0;
+        padding-left: 25px;
+        font-size: 16px;
+    }
+
+    .el-button {
+        width: 180px;
+        height: 50px;
+        border-radius: 25px;
+        margin-top: 50px;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1.15px;
+        background-color: var(--btn-bg-color);
+        color: #f9f9f9;
+        box-shadow: var(--btn-box-shadow);
+        border: none;
+        outline: none;
+    }
 }
 </style>

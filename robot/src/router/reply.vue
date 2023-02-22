@@ -142,40 +142,42 @@ useReplyStore().init();
 </template>
 
 
-<style scoped>
-.common-layout {
-    flex-direction: column;
-}
-.el-container.content {
-    margin-top: 50px;
-}
-span {
-    word-break: keep-all;
-    white-space: nowrap;
-}
+<style scoped lang="less">
 #reply-page {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
-}
-.el-button {
-    box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #ffffff;
-    background: var(--main-bg-color);
-    color: var(--main-text-color);
-    border: none;
-}
-.el-button:focus,
-.el-button:hover {
-    color: unset;
-    border-color: var(--main-bg-color);
-    background-color: unset;
-    box-shadow: var(--main-box-shadow-xs-in);
-    color: #686868;
-}
 
-:deep(.el-input__inner) {
-    height: 30px;
-    padding-left: 10px;
+    .common-layout {
+        flex-direction: column;
+    }
+    .el-container.content {
+        margin-top: 50px;
+    }
+    span {
+        word-break: keep-all;
+        white-space: nowrap;
+    }
+
+    .el-button {
+        box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #ffffff;
+        background: var(--main-bg-color);
+        color: var(--main-text-color);
+        border: none;
+    }
+    .el-button:focus,
+    .el-button:hover {
+        color: unset;
+        border-color: var(--main-bg-color);
+        background-color: unset;
+        box-shadow: var(--main-box-shadow-xs-in);
+        color: #686868;
+    }
+
+    :deep(.el-input__inner) {
+        height: 30px;
+        padding-left: 10px;
+    }
 }
 </style>
