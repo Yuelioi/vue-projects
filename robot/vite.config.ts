@@ -30,8 +30,8 @@ export default defineConfig({
     resolve: {
         // 配置别名,在tsconfig.json 也要做类似的配置
         alias: [
-            { find: "@", replacement: resolve(__dirname, "./src") },
-            { find: "@style", replacement: resolve(__dirname, "./src/assets/css") },
+            { find: "@", replacement: resolve(__dirname, "src") },
+            { find: "@style", replacement: resolve(__dirname, "src", "assets", "css") },
         ],
     }, build: {
         chunkSizeWarningLimit: 1500,
