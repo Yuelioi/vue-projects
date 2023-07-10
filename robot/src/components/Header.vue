@@ -3,7 +3,9 @@ import { useAuthStore } from "@/stores/auth";
 import { toRefs } from "vue";
 import { useRouter } from "vue-router";
 
-const { isOnline, avatar } = toRefs(useAuthStore());
+const { isOnline } = toRefs(useAuthStore());
+
+const avatar = localStorage.getItem("bot_avatar")
 
 useAuthStore().init();
 
@@ -37,17 +39,12 @@ const goBack = () => {
                 <div class="flex items-center">
                     <el-avatar :size="32" class="mr-3" :src="avatar" />
 
-                    <el-tag style="margin-left: 0.75rem" v-show="isOnline"
-                        >Admin</el-tag
-                    >
-                    <el-tag style="margin-left: 0.75rem" v-show="!isOnline"
-                        >游客</el-tag
-                    >
+                    <el-tag style="margin-left: 0.75rem" v-show="isOnline">Admin</el-tag>
+                    <el-tag style="margin-left: 0.75rem" v-show="!isOnline">游客</el-tag>
                 </div>
             </template>
         </el-page-header>
-        <el-divider
-    /></el-header>
+        <el-divider /></el-header>
 </template>
 
 <style lang="css">
@@ -61,6 +58,7 @@ const goBack = () => {
 .flex {
     display: flex;
 }
+
 .items-center {
     align-items: center;
 }

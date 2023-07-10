@@ -5,7 +5,6 @@ import { onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import { marked } from "marked";
 
-
 //引入Elmessage和Elloading的css样式文件
 import "element-plus/theme-chalk/el-loading.css";
 import "element-plus/theme-chalk/el-message.css";
@@ -40,10 +39,10 @@ export const usePlanStore = defineStore("storeId", {
         };
     },
     getters: {
-        getAvatar: state => {
+        getAvatar: (state) => {
             return `https://q.qlogo.cn/g?b=qq&nk=${state.username}&s=640`;
         },
-        filterTableData: state => {
+        filterTableData: (state) => {
             let data = state.tableData.filter((data: Plan | any) => {
                 return (
                     !state.search ||
@@ -60,7 +59,6 @@ export const usePlanStore = defineStore("storeId", {
 
             return data;
         },
-
     },
     actions: {
         responseToData(sqldata: any) {
@@ -85,7 +83,9 @@ export const usePlanStore = defineStore("storeId", {
             }
             return res;
         },
-        getHtml(content: any) { return marked.parse(content) },
+        getHtml(content: any) {
+            return marked.parse(content);
+        },
         init(token: string) {
             let that = this;
 
@@ -100,11 +100,11 @@ export const usePlanStore = defineStore("storeId", {
                 }).then(function (response) {
                     const sqldata = response.data["sqldata"];
                     let res = <any>[];
-                    console.log(sqldata)
+                    console.log(sqldata);
                     if (sqldata) {
                         res = that.responseToData(sqldata);
                     }
-                    console.log(res)
+                    console.log(res);
                     if (res.length > 0) {
                         that.username = res[0].username;
                         that.tableData = res;
@@ -136,12 +136,12 @@ export const usePlanStore = defineStore("storeId", {
         },
         handleTableDelete(index: any, row: Plan) {
             const that = this;
-            if (row.id !== 0) {
+            if (row.ID !== 0) {
                 axios({
                     method: "get",
                     url: "https://bot.yuelili.com/api/plan/delete",
                     params: {
-                        plan_id: row.id,
+                        plan_id: row.ID,
                         token: this.token,
                     },
                 }).then(function (response) {
@@ -164,14 +164,14 @@ export const usePlanStore = defineStore("storeId", {
         },
         handleTableSave(row: Plan) {
             let needRefresh = true;
-            if (row.id == 0) {
+            if (row.ID == 0) {
                 axios({
                     method: "get",
                     url: "https://bot.yuelili.com/api/plan/add",
                     params: {
                         token: this.token,
                     },
-                }).then(function (response) { });
+                }).then(function (response) {});
             } else {
                 axios({
                     method: "get",

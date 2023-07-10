@@ -48,11 +48,9 @@ export const useLoginStore = defineStore("loginId", {
                 axios({
                     method: "get",
                     url: "https://api.ixiaowai.cn/ylapi/index.php/",
-
                 }).then((response) => {
                     that.yiyan = response.data;
                 });
-
 
                 if (that.token) {
                     that.showAutoLoginDlg = true;
@@ -60,30 +58,27 @@ export const useLoginStore = defineStore("loginId", {
             });
         },
         AutoLogin() {
-            axios.post("https://bot.yuelili.com/api/login", {
-                token: this.token,
-
-            }).then((response: any) => {
-                console.log(response.data)
-
-                if (response.data.status_code == 200) {
-                    ElMessage({
-                        showClose: true,
-                        message: response.data.message,
-                        type: "success",
-                    });
-                    window.location.href += "reply";
-                } else {
-                    this.showAutoLoginDlg = false;
-                    ElMessage({
-                        showClose: true,
-                        message: response.data.message,
-                        type: "error",
-                    });
-                }
-
-            });
-
+            axios
+                .post("https://bot.yuelili.com/api/login", {
+                    token: this.token,
+                })
+                .then((response: any) => {
+                    if (response.data.status_code == 200) {
+                        ElMessage({
+                            showClose: true,
+                            message: response.data.message,
+                            type: "success",
+                        });
+                        window.location.href += "reply";
+                    } else {
+                        this.showAutoLoginDlg = false;
+                        ElMessage({
+                            showClose: true,
+                            message: response.data.message,
+                            type: "error",
+                        });
+                    }
+                });
         },
         async reset_password(username: string, password: string, new_password: string) {
             const response = await axios.get("https://bot.yuelili.com/api/change_password", {
@@ -97,11 +92,10 @@ export const useLoginStore = defineStore("loginId", {
         },
         async simulateLogin() {
             this.btnloading = true;
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
 
             this.btnloading = false;
         },
-
 
         async register(formEl: FormInstance | undefined) {
             if (!formEl) {
@@ -118,7 +112,6 @@ export const useLoginStore = defineStore("loginId", {
                 nickname: this.user.nickname,
             });
 
-
             if (response.data.status_code == 200) {
                 ElMessage({
                     showClose: true,
@@ -126,6 +119,7 @@ export const useLoginStore = defineStore("loginId", {
                     type: "success",
                 });
                 localStorage.setItem("bot_jwt_token", response.data.token);
+                localStorage.setItem("bot_avatar", `https://q1.qlogo.cn/g?b=qq&nk=${this.user.username}&s=640`);
             } else {
                 ElMessage({
                     showClose: true,
@@ -133,8 +127,6 @@ export const useLoginStore = defineStore("loginId", {
                     type: "error",
                 });
             }
-
-
         },
         async login(formEl: FormInstance | undefined) {
             if (!formEl) {
@@ -159,6 +151,8 @@ export const useLoginStore = defineStore("loginId", {
                     type: "success",
                 });
                 localStorage.setItem("bot_jwt_token", response.data.token);
+                localStorage.setItem("bot_avatar", `https://q1.qlogo.cn/g?b=qq&nk=${this.user.username}&s=640`);
+
                 window.location.href += "reply";
             } else {
                 ElMessage({
@@ -167,7 +161,6 @@ export const useLoginStore = defineStore("loginId", {
                     type: "error",
                 });
             }
-
         },
     },
 });
