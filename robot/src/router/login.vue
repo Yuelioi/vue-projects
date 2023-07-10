@@ -1,9 +1,12 @@
 <script lang="ts" setup>
+
 import { toRefs, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useLoginStore } from "@/stores/login";
 import type { FormInstance } from "element-plus";
 import { reactive } from "vue";
+
+
 
 const ForgetPwdDlg = ref(false);
 const formLabelWidth = "100px";
@@ -61,89 +64,49 @@ const formRef = ref<FormInstance>();
                 <div class="card1 card">
                     <el-card style="border-radius: 10px" shadow="never">
                         <h2 class="title">登录</h2>
-                        <el-form
-                            class="login-form"
-                            :model="user"
-                            :rules="rules"
-                            ref="formRef"
-                        >
+                        <OhVueIcon name="oi oi-home" />
+                        <v-icon name="bi-music-player" />
+                        <v-icon name="fc-globe" />
+                        <v-icon name="oi-repo-pull" />
+                        <v-icon name="vi-file-type-gridsome" />
+                        <AiAcclaimSquare />
+                        <el-form class="login-form" :model="user" :rules="rules" ref="formRef">
                             <el-form-item prop="username">
-                                <el-input
-                                    prefix-icon="User"
-                                    v-model="user.username"
-                                    placeholder="用户名(QQ)"
-                                ></el-input>
+                                <el-input prefix-icon="User" v-model="user.username" placeholder="用户名(QQ)"></el-input>
                             </el-form-item>
 
                             <el-form-item prop="password">
-                                <el-input
-                                    prefix-icon="Flag"
-                                    v-model="user.password"
-                                    placeholder="密码"
-                                    type="password"
-                                ></el-input>
+                                <el-input prefix-icon="Flag" v-model="user.password" placeholder="密码"
+                                    type="password"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button
-                                    :loading="btnloading"
-                                    class="login-button"
-                                    type="primary"
-                                    native-type="submit"
-                                    @click="login(formRef)"
-                                    block
-                                    >登录</el-button
-                                >
+                                <el-button :loading="btnloading" class="login-button" type="primary" native-type="submit"
+                                    @click="login(formRef)" block>登录</el-button>
                             </el-form-item>
-                            <a
-                                class="forgot-password"
-                                @click="ForgetPwdDlg = true"
-                                >忘记密码 ?</a
-                            >
+                            <a class="forgot-password" @click="ForgetPwdDlg = true">忘记密码 ?</a>
                         </el-form>
                     </el-card>
                 </div>
                 <div class="card2 card">
                     <el-card style="border-radius: 10px" shadow="never">
                         <h2 class="title">注册</h2>
-                        <el-form
-                            class="login-form"
-                            :model="user"
-                            :rules="rules"
-                            ref="formRef"
-                        >
+
+                        <el-form class="login-form" :model="user" :rules="rules" ref="formRef">
                             <el-form-item prop="username">
-                                <el-input
-                                    prefix-icon="User"
-                                    v-model="user.username"
-                                    placeholder="用户名(QQ)"
-                                ></el-input>
+                                <el-input prefix-icon="User" v-model="user.username" placeholder="用户名(QQ)"></el-input>
                             </el-form-item>
 
                             <el-form-item prop="password">
-                                <el-input
-                                    prefix-icon="Flag"
-                                    v-model="user.nickname"
-                                    placeholder="昵称"
-                                    type="password"
-                                ></el-input>
+                                <el-input prefix-icon="Flag" v-model="user.nickname" placeholder="昵称"
+                                    type="password"></el-input>
                             </el-form-item>
                             <el-form-item prop="password">
-                                <el-input
-                                    prefix-icon="Flag"
-                                    v-model="user.password"
-                                    placeholder="密码"
-                                    type="password"
-                                ></el-input>
+                                <el-input prefix-icon="Flag" v-model="user.password" placeholder="密码"
+                                    type="password"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button
-                                    :loading="btnloading"
-                                    class="login-button"
-                                    type="primary"
-                                    native-type="submit"
-                                    @click="register(formRef)"
-                                    >注册</el-button
-                                >
+                                <el-button :loading="btnloading" class="login-button" type="primary" native-type="submit"
+                                    @click="register(formRef)">注册</el-button>
                             </el-form-item>
                         </el-form>
                     </el-card>
@@ -168,17 +131,11 @@ const formRef = ref<FormInstance>();
                     </div>
                 </div>
 
-                <el-dialog
-                    v-model="showAutoLoginDlg"
-                    title="状态检测"
-                    width="20%"
-                >
+                <el-dialog v-model="showAutoLoginDlg" title="状态检测" width="20%">
                     <span>检测到登录信息,是否自动登录</span>
                     <template #footer>
                         <span class="dialog-footer">
-                            <el-button @click="showAutoLoginDlg = false"
-                                >取消</el-button
-                            >
+                            <el-button @click="showAutoLoginDlg = false">取消</el-button>
                             <el-button type="primary" @click="AutoLogin()">
                                 确定
                             </el-button>
@@ -186,61 +143,28 @@ const formRef = ref<FormInstance>();
                     </template>
                 </el-dialog>
 
-                <el-dialog
-                    v-model="ForgetPwdDlg"
-                    title="更改密码"
-                    width="25%"
-                    style="font-size=24px"
-                >
+                <el-dialog v-model="ForgetPwdDlg" title="更改密码" width="25%" style="font-size=24px">
                     <el-form :model="form">
-                        <el-form-item
-                            label="用户名"
-                            :label-width="formLabelWidth"
-                        >
-                            <el-input
-                                v-model="form.name"
-                                autocomplete="off"
-                                class="form__input"
-                            />
+                        <el-form-item label="用户名" :label-width="formLabelWidth">
+                            <el-input v-model="form.name" autocomplete="off" class="form__input" />
                         </el-form-item>
-                        <el-form-item
-                            label="旧密码"
-                            :label-width="formLabelWidth"
-                        >
-                            <el-input
-                                v-model="form.oldpassword"
-                                autocomplete="off"
-                                class="form__input"
-                                id="form__input"
-                            />
+                        <el-form-item label="旧密码" :label-width="formLabelWidth">
+                            <el-input v-model="form.oldpassword" autocomplete="off" class="form__input" id="form__input" />
                         </el-form-item>
-                        <el-form-item
-                            label="新密码"
-                            :label-width="formLabelWidth"
-                        >
-                            <el-input
-                                v-model="form.newpassword"
-                                autocomplete="off"
-                                class="form__input"
-                            />
+                        <el-form-item label="新密码" :label-width="formLabelWidth">
+                            <el-input v-model="form.newpassword" autocomplete="off" class="form__input" />
                         </el-form-item>
                     </el-form>
                     <template #footer>
                         <span class="dialog-footer">
-                            <el-button @click="ForgetPwdDlg = false"
-                                >取消</el-button
-                            >
-                            <el-button
-                                type="primary"
-                                @click="
-                                    reset_password(
-                                        form.name,
-                                        form.oldpassword,
-                                        form.newpassword
-                                    )
-                                "
-                                style="di"
-                            >
+                            <el-button @click="ForgetPwdDlg = false">取消</el-button>
+                            <el-button type="primary" @click="
+                                reset_password(
+                                    form.name,
+                                    form.oldpassword,
+                                    form.newpassword
+                                )
+                            " style="di">
                                 提交
                             </el-button>
                         </span>
@@ -267,6 +191,7 @@ const formRef = ref<FormInstance>();
     font-size: 12px;
     background-color: var(--main-bg-color);
     color: var(--main-text-color);
+
     .login {
         position: relative;
 
@@ -403,6 +328,7 @@ const formRef = ref<FormInstance>();
             transition: 1.25s;
         }
     }
+
     .el-button:hover {
         background-color: #7d97e7;
     }
@@ -422,11 +348,13 @@ const formRef = ref<FormInstance>();
         height: 32px;
         margin-top: 5px;
     }
+
     .dialog-footer {
         display: flex;
         justify-content: space-evenly;
         padding-bottom: 15px;
     }
+
     .el-form {
         display: flex;
         justify-content: center;

@@ -1,5 +1,6 @@
 lockfileVersion: '6.0'
 
+<<<<<<< HEAD
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
@@ -26,6 +27,37 @@ dependencies:
   vue-router:
     specifier: '4'
     version: 4.1.6(vue@3.2.45)
+=======
+specifiers:
+  '@element-plus/icons-vue': ^2.0.10
+  '@types/marked': ^4.0.8
+  '@types/node': ^18.11.18
+  '@vitejs/plugin-vue': ^4.0.0
+  axios: ^1.2.6
+  element-plus: ^2.2.28
+  less: ^4.1.3
+  less-loader: ^11.1.0
+  marked: ^4.2.12
+  oh-vue-icons: 1.0.0-rc3
+  pinia: ^2.0.29
+  typescript: ^4.9.3
+  unplugin-auto-import: ^0.13.0
+  unplugin-vue-components: ^0.23.0
+  vite: ^4.0.0
+  vue: ^3.2.45
+  vue-router: '4'
+  vue-tsc: ^1.0.11
+
+dependencies:
+  '@element-plus/icons-vue': 2.0.10_vue@3.2.45
+  axios: 1.2.6
+  element-plus: 2.2.28_vue@3.2.45
+  marked: 4.2.12
+  oh-vue-icons: 1.0.0-rc3_vue@3.2.45
+  pinia: 2.0.29_prq2uz4lho2pwp6irk4cfkrxwu
+  vue: 3.2.45
+  vue-router: 4.1.6_vue@3.2.45
+>>>>>>> 5d95af47c9ba7b9f9ff446db7dc497a408511d66
 
 devDependencies:
   '@types/marked':
@@ -1905,7 +1937,24 @@ packages:
     resolution: {integrity: sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw==}
     dev: false
 
+<<<<<<< HEAD
   /parse-node-version@1.0.1:
+=======
+  /oh-vue-icons/1.0.0-rc3_vue@3.2.45:
+    resolution: {integrity: sha512-+k2YC6piK7sEZnwbkQF3UokFPMmgqpiLP6f/H0ovQFLl20QA5V4U8EcI6EclD2Lt5NMQ3k6ilLGo8XyXqdVSvg==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.45
+      vue-demi: 0.12.5_vue@3.2.45
+    dev: false
+
+  /parse-node-version/1.0.1:
+>>>>>>> 5d95af47c9ba7b9f9ff446db7dc497a408511d66
     resolution: {integrity: sha512-3YHlOa/JgH6Mnpr05jP9eDG254US9ek25LyIxZlDItp2iJtwyaXQb57lBYLdT3MowkUFYEV2XXNAYIPlESvJlA==}
     engines: {node: '>= 0.10'}
     dev: true
@@ -2400,7 +2449,26 @@ packages:
       fsevents: 2.3.2
     dev: true
 
+<<<<<<< HEAD
   /vue-demi@0.13.11(vue@3.2.45):
+=======
+  /vue-demi/0.12.5_vue@3.2.45:
+    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.45
+    dev: false
+
+  /vue-demi/0.13.11_vue@3.2.45:
+>>>>>>> 5d95af47c9ba7b9f9ff446db7dc497a408511d66
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
     engines: {node: '>=12'}
     hasBin: true
